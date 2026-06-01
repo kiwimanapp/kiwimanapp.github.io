@@ -3,57 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiwiman | Desarrollador de Aplicaciones</title>
+    <title>Kiwiman | Portafolio Técnico</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
+        /* Variables de color para mantener el modo oscuro */
+        :root {
+            --bg-principal: #0f172a;
+            --bg-tarjeta: #1e293b;
+            --texto-principal: #f8fafc;
+            --texto-secundario: #94a3b8;
+            --accent: #10b981; /* Verde éxito/tecnológico */
+            --accent-hover: #059669;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .container {
-            text-align: center;
-            padding: 20px;
-            max-width: 600px;
-        }
-        h1 {
-            color: #4CAF50;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 1.1rem;
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
             line-height: 1.6;
-            color: #b0b0b0;
+            padding: 20px;
         }
-        .btn {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
+
+        .contenedor {
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        /* Cabecera */
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--texto-principal);
+            margin-bottom: 8px;
+        }
+
+        header .subtitulo {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        header p {
+            color: var(--texto-secundario);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Secciones Generales */
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg-tarjeta);
+            padding-bottom: 8px;
+            color: var(--texto-principal);
+        }
+
+        /* Bloque de Habilidades (Etiquetas) */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background-color: var(--bg-tarjeta);
+            color: var(--texto-principal);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #334155;
+        }
+
+        /* Tarjeta de Proyecto */
+        .tarjeta-proyecto {
+            background-color: var(--bg-tarjeta);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 16px;
+            transition: transform 0.2s;
+        }
+
+        .tarjeta-proyecto:hover {
+            transform: translateY(-2px);
+        }
+
+        .proyecto-cabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .proyecto-cabecera h3 {
+            font-size: 1.3rem;
+            color: var(--texto-principal);
+        }
+
+        .badge {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-weight: bold;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: background 0.3s;
         }
+
+        .tarjeta-proyecto p {
+            color: var(--texto-secundario);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Botones */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--accent);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+        }
+
         .btn:hover {
-            background-color: #45a049;
+            background-color: var(--accent-hover);
+        }
+
+        .btn-contacto {
+            display: block;
+            width: max-content;
+            margin: 0 auto;
+            background-color: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-contacto:hover {
+            background-color: var(--accent);
+            color: #ffffff;
+        }
+
+        /* Pie de página */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--bg-tarjeta);
+            color: var(--texto-secundario);
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Kiwiman</h1>
-        <p>Bienvenido a mi portal de desarrollador. Aquí encontrarás mis aplicaciones nativas y proyectos de videojuegos creados en Android Studio.</p>
-        <p>Próximamente estará disponible el catálogo completo.</p>
-        <a href="https://play.google.com/store/apps/details?id=com.kiwiman.misenlaces1" class="btn" target="_blank">Ver Mis Enlaces en Play Store</a>
+
+    <div class="contenedor">
+
+        <!-- CABECERA -->
+        <header>
+            <h1>Daniel Pozo</h1>
+            <div class="subtitulo">Soporte Técnico, Redes & Desarrollador Android</div>
+            <p>Especialista en soluciones microinformáticas, gestión de infraestructura de redes y desarrollo nativo de aplicaciones móviles enfocado en la optimización y la experiencia de usuario.</p>
+        </header>
+
+        <!-- HABILIDADES -->
+        <section>
+            <h2>Competencias Técnicas</h2>
+            <div class="skills-grid">
+                <div class="skill-tag">Android Studio</div>
+                <div class="skill-tag">Desarrollo Java / Kotlin</div>
+                <div class="skill-tag">Soporte Técnico Convergente</div>
+                <div class="skill-tag">Microinformática y Hardware</div>
+                <div class="skill-tag">Administración de Redes</div>
+                <div class="skill-tag">Bases de Datos (Microsoft Access / SQLite)</div>
+                <div class="skill-tag">Control de Versiones (Git / GitHub)</div>
+            </div>
+        </section>
+
+        <!-- PROYECTOS -->
+        <section>
+            <h2>Proyectos Destacados</h2>
+            
+            <div class="tarjeta-proyecto">
+                <div class="proyecto-cabecera">
+                    <h3>Mis Enlaces</h3>
+                    <span class="badge">Google Play</span>
+                </div>
+                <p>Aplicación móvil nativa diseñada para centralizar, organizar y acceder de forma rápida a enlaces de interés. Enfocada en la productividad personal, ofreciendo una interfaz limpia, categorización eficiente y almacenamiento local optimizado.</p>
+                <a href="https://play.google.com/store/apps/developer?id=kiwiman" target="_blank" class="btn">
+                    Ver en Google Play →
+                </a>
+            </div>
+        </section>
+
+        <!-- CONTACTO SEGURO -->
+        <section style="text-align: center; margin-top: 50px;">
+            <h2>Contacto Profesional</h2>
+            <p style="color: var(--texto-secundario); margin-bottom: 20px;">
+                ¿Quieres colaborar en un proyecto, incorporar soporte técnico especializado o solicitar mi CV detallado?
+            </p>
+            <!-- Sustituye 'tu-correo@email.com' por el correo que prefieras usar -->
+            <a href="mailto:tu-correo@email.com?subject=Contacto%20desde%20Kiwiman.net" class="btn btn-contacto">
+                Enviar un mensaje privado
+            </a>
+        </section>
+
+        <!-- PIE DE PÁGINA -->
+        <footer>
+            <p>&copy; 2026 Kiwiman. Todos los derechos reservados.</p>
+        </footer>
+
     </div>
+
 </body>
 </html>
