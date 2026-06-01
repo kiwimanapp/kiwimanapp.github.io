@@ -11,6 +11,7 @@
             --texto-principal: #f8fafc;
             --accent: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         * {
@@ -31,10 +32,9 @@
             padding: 10px;
         }
 
-        /* Barra Superior */
         .barra-superior {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -54,11 +54,8 @@
             transition: all 0.2s;
         }
 
-        .btn-volver:hover {
-            background-color: #334155;
-        }
+        .btn-volver:hover { background-color: #334155; }
 
-        /* Contenedor del Juego */
         .juego-layout {
             display: flex;
             gap: 20px;
@@ -68,6 +65,7 @@
             border: 1px solid #334155;
             max-width: 950px;
             width: 100%;
+            height: 480px;
         }
 
         canvas {
@@ -76,7 +74,6 @@
             cursor: none;
         }
 
-        /* Panel Lateral del Estado del PC */
         .panel-pc {
             flex: 1;
             display: flex;
@@ -100,7 +97,6 @@
             border-radius: 4px;
         }
 
-        /* Simulación visual de llenado */
         .pc-llenado {
             position: absolute;
             bottom: 0;
@@ -112,14 +108,13 @@
             border-radius: 0 0 4px 4px;
         }
 
-        /* Pantallas Emergentes (Game Over / Victoria) */
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(15, 23, 42, 0.95);
+            background-color: rgba(15, 23, 42, 0.96);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -146,6 +141,27 @@
         }
 
         .btn-accion:hover { background-color: #059669; }
+
+        .dificultad-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .btn-dif {
+            padding: 14px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
+        }
+
+        .btn-dif:hover { transform: scale(1.05); }
+        .btn-facil { background-color: var(--accent); }
+        .btn-dificil { background-color: var(--danger); }
         
         .bocadillo {
             background: white;
@@ -156,6 +172,13 @@
             font-size: 0.85rem;
             max-width: 180px;
             margin-bottom: 10px;
+        }
+
+        .info-modo {
+            font-size: 0.85rem;
+            color: var(--texto-secundario);
+            margin-top: 5px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -168,13 +191,24 @@
 
     <div class="juego-layout" style="position: relative;">
         
+        <!-- PANTALLA INICIAL -->
+        <div id="pantalla-inicio" class="overlay">
+            <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Elige tu Nivel Técnico 💻</h1>
+            <p style="color: var(--texto-secundario); max-width: 500px;">
+                Mueve a Daniel para recolectar el hardware idóneo. ¡Evita coger objetos dañinos o el ordenador arderá!
+            </p>
+            <div class="dificultad-container">
+                <button class="btn-dif btn-facil" onclick="iniciarJuegoConDificultad('facil')">Modo Fácil</button>
+                <button class="btn-dif btn-dificil" onclick="iniciarJuegoConDificultad('dificil')">Modo Difícil 🔥</button>
+            </div>
+        </div>
+
         <!-- PANTALLA GAME OVER -->
         <div id="pantalla-gameover" class="overlay oculto">
             <h1 style="color: var(--danger); font-size: 2.5rem; margin-bottom: 10px;">¡PC EN LLAMAS! 🔥</h1>
-            <!-- Simulación de PC quemado usando CSS -->
             <div style="font-size: 5rem; margin: 15px;">💥🖥️🔥</div>
             <p style="color: var(--texto-secundario);">Has metido componentes incompatibles y la fuente ha explotado.</p>
-            <button class="btn-accion" onclick="reiniciarJuego()">Volver a Intentarlo</button>
+            <button class="btn-accion" onclick="volverAlMenu()">Cambiar Dificultad / Reintentar</button>
         </div>
 
         <!-- PANTALLA VICTORIA -->
@@ -182,7 +216,7 @@
             <h1 style="color: var(--accent); font-size: 2.5rem; margin-bottom: 10px;">¡Enhorabuena! 🎉</h1>
             <div style="font-size: 5rem; margin: 15px;">🚀🖥️✨</div>
             <p style="color: var(--texto-secundario);">¡Has montado un equipo estable y optimizado al 100%!</p>
-            <button class="btn-accion" onclick="reiniciarJuego()">Volver a Jugar</button>
+            <button class="btn-accion" onclick="volverAlMenu()">Volver a Jugar</button>
         </div>
 
         <!-- ÁREA DEL JUEGO -->
@@ -190,14 +224,15 @@
 
         <!-- PANEL LATERAL -->
         <div class="panel-pc">
-            <div id="texto-bocadillo" class="bocadillo">¡Vamos a montar ese PC! Coge las piezas buenas.</div>
+            <div id="texto-bocadillo" class="bocadillo">¡Selecciona un modo para empezar!</div>
             <h3>Estado del Montaje</h3>
             <div class="pc-preview">
                 <div id="barraProgreso" class="pc-llenado"></div>
                 <div style="font-size: 3rem; text-align: center; line-height: 140px; filter: grayscale(100%); opacity: 0.3;">🖥️</div>
             </div>
-            <p id="contador-piezas">Piezas: 0 / 5</p>
-            <p id="contador-fallos" style="color: var(--danger); margin-top: 10px; font-weight: bold;">Fallos: 0 / 3</p>
+            <p id="contador-piezas">Piezas: 0 / --</p>
+            <p id="contador-fallos" style="color: var(--danger); margin-top: 5px; font-weight: bold;">Fallos: 0 / 3</p>
+            <div id="badge-dificultad" class="info-modo">Modo: Ninguno</div>
         </div>
 
     </div>
@@ -206,30 +241,35 @@
         const canvas = document.getElementById("canvasJuego");
         const ctx = canvas.getContext("2d");
 
-        // Configuración inicial del jugador (Monigote con barba)
+        // Configuración del protagonista avanzado
         const jugador = {
             x: 270,
-            y: 390,
-            ancho: 50,
-            alto: 60,
-            velocidad: 8
+            y: 360,
+            ancho: 60,
+            alto: 80,
+            velocidad: 9
         };
 
-        // Tipos de objetos que caen
-        const ITEMS_BUENOS = ["💾 RAM", "🎴 GPU", "🔲 CPU", "🔌 Fuente", "🗄️ SSD"];
-        const ITEMS_MALOS = ["🍎 Manzana Mordida", "🍌 Plátano", "👟 Zapato Viejo", "🍕 Pizza Fría"];
+        // Identificadores de objetos gráficos
+        const ITEMS_BUENOS = ["RAM", "GPU", "CPU", "FUENTE", "SSD"];
+        const ITEMS_MALOS = ["MANZANA", "PLATANO", "ZAPATO", "PIZZA"];
 
         let objetos = [];
         let piezasLogradas = 0;
         let fallos = 0;
-        let juegoActivo = true;
+        let juegoActivo = false;
         let spawnTimer = 0;
+        
+        let modoActual = "facil";
+        let objetivoPiezas = 5;
+        let velocidadBase = 3;
+        let frecuenciaSpawn = 50; 
 
-        // Captura de movimiento (Teclado y Ratón para comodidad)
         let teclas = {};
         window.addEventListener("keydown", (e) => teclas[e.code] = true);
         window.addEventListener("keyup", (e) => teclas[e.code] = false);
         canvas.addEventListener("mousemove", (e) => {
+            if(!juegoActivo) return;
             const rect = canvas.getBoundingClientRect();
             let mouseX = e.clientX - rect.left;
             if(mouseX > 0 && mouseX < canvas.width) {
@@ -237,18 +277,42 @@
             }
         });
 
+        function iniciarJuegoConDificultad(dificultad) {
+            modoActual = dificultad;
+            document.getElementById("pantalla-inicio").classList.add("oculto");
+            
+            if (dificultad === "facil") {
+                objetivoPiezas = 5;
+                velocidadBase = 2.5;
+                frecuenciaSpawn = 55;
+                document.getElementById("badge-dificultad").innerText = "Modo: FÁCIL";
+                document.getElementById("badge-dificultad").style.color = "var(--accent)";
+            } else {
+                objetivoPiezas = 8;
+                velocidadBase = 4.5;
+                frecuenciaSpawn = 35;
+                document.getElementById("badge-dificultad").innerText = "Modo: DIFÍCIL 🔥";
+                document.getElementById("badge-dificultad").style.color = "var(--danger)";
+            }
+            reiniciarEstructuraJuego();
+        }
+
         function crearObjeto() {
-            const esBueno = Math.random() > 0.4; // 60% probabilidad de pieza buena
-            const nombre = esBueno 
+            const esBueno = Math.random() > 0.4;
+            const tipo = esBueno 
                 ? ITEMS_BUENOS[Math.floor(Math.random() * ITEMS_BUENOS.length)]
                 : ITEMS_MALOS[Math.floor(Math.random() * ITEMS_MALOS.length)];
             
             objetos.push({
-                x: Math.random() * (canvas.width - 80) + 10,
-                y: -20,
-                texto: nombre,
+                x: Math.random() * (canvas.width - 60) + 30,
+                y: -40,
+                tipo: tipo,
                 esBueno: esBueno,
-                velocidad: Math.random() * 2 + 3
+                ancho: 40,
+                alto: 40,
+                velocidad: Math.random() * 1.5 + velocidadBase,
+                angulo: 0,
+                velocidadRotacion: (Math.random() - 0.5) * 0.05 // Efecto de giro real
             });
         }
 
@@ -264,9 +328,9 @@
         }
 
         function actualizarInterfaz() {
-            document.getElementById("contador-piezas").innerText = `Piezas: ${piezasLogradas} / 5`;
+            document.getElementById("contador-piezas").innerText = `Piezas: ${piezasLogradas} / ${objetivoPiezas}`;
             document.getElementById("contador-fallos").innerText = `Fallos: ${fallos} / 3`;
-            document.getElementById("barraProgreso").style.height = `${(piezasLogradas / 5) * 100}%`;
+            document.getElementById("barraProgreso").style.height = `${(piezasLogradas / objetivoPiezas) * 100}%`;
         }
 
         function terminarJuego(victoria) {
@@ -278,7 +342,7 @@
             }
         }
 
-        function reiniciarJuego() {
+        function reiniciarEstructuraJuego() {
             objetos = [];
             piezasLogradas = 0;
             fallos = 0;
@@ -290,26 +354,34 @@
             buclePrincipal();
         }
 
+        function volverAlMenu() {
+            juegoActivo = false;
+            document.getElementById("pantalla-victoria").classList.add("oculto");
+            document.getElementById("pantalla-gameover").classList.add("oculto");
+            document.getElementById("pantalla-inicio").classList.remove("oculto");
+            document.getElementById("texto-bocadillo").innerText = "¡Selecciona un modo para empezar!";
+            actualizarInterfaz();
+        }
+
         function moverYDetectarColisiones() {
-            // Controles por teclado
             if (teclas["ArrowLeft"] && jugador.x > 0) jugador.x -= jugador.velocidad;
             if (teclas["ArrowRight"] && jugador.x < canvas.width - jugador.ancho) jugador.x += jugador.velocidad;
 
-            // Gestión de objetos cayendo
             spawnTimer++;
-            if(spawnTimer % 50 === 0) crearObjeto();
+            if(spawnTimer % frecuenciaSpawn === 0) crearObjeto();
 
             for(let i = objetos.length - 1; i >= 0; i--) {
                 let obj = objetos[i];
                 obj.y += obj.velocidad;
+                obj.angulo += obj.velocidadRotacion;
 
-                // Detección de colisión con el jugador
-                if (obj.y + 15 >= jugador.y && obj.y <= jugador.y + jugador.alto &&
-                    obj.x + 40 >= jugador.x && obj.x <= jugador.x + jugador.ancho) {
+                // Colisión precisa basada en cajas de impacto ajustadas
+                if (obj.y + obj.alto >= jugador.y && obj.y <= jugador.y + jugador.alto &&
+                    obj.x + obj.ancho >= jugador.x && obj.x <= jugador.x + jugador.ancho) {
                     
                     if(obj.esBueno) {
                         piezasLogradas++;
-                        if(piezasLogradas >= 5) terminarJuego(true);
+                        if(piezasLogradas >= objetivoPiezas) terminarJuego(true);
                     } else {
                         fallos++;
                         if(fallos >= 3) terminarJuego(false);
@@ -320,61 +392,190 @@
                     continue;
                 }
 
-                // Si cae al suelo se elimina sin penalizar (solo penaliza coger lo malo)
-                if(obj.y > canvas.height) {
-                    objetos.splice(i, 1);
-                }
+                if(obj.y > canvas.height) objetos.splice(i, 1);
             }
+        }
+
+        // --- MOTOR GRÁFICO VECTORIAL INTEGRADO ---
+        function dibujarJugador(x, y) {
+            ctx.save();
+            
+            // 1. Piernas y Zapatos
+            ctx.fillStyle = "#1e293b"; // Pantalón oscuro
+            ctx.fillRect(x + 18, y + 55, 10, 20);
+            ctx.fillRect(x + 32, y + 55, 10, 20);
+            ctx.fillStyle = "#ffffff"; // Calzado blanco
+            ctx.fillRect(x + 14, y + 72, 14, 8);
+            ctx.fillRect(x + 32, y + 72, 14, 8);
+
+            // 2. Cuerpo (Camiseta técnica azul vibrante)
+            ctx.fillStyle = "#2563eb";
+            ctx.beginPath();
+            ctx.roundRect(x + 12, y + 25, 36, 32, 6);
+            ctx.fill();
+
+            // 3. Brazos levantados listos para atrapar componentes
+            ctx.fillStyle = "#fbcfe8"; // Tono piel base
+            ctx.fillRect(x + 2, y + 18, 10, 22); // Brazo izq
+            ctx.fillRect(x + 48, y + 18, 10, 22); // Brazo der
+            ctx.fillStyle = "#2563eb"; // Mangas de la camiseta
+            ctx.fillRect(x + 6, y + 25, 8, 8);
+            ctx.fillRect(x + 46, y + 25, 8, 8);
+
+            // 4. Cabeza (Cara)
+            ctx.fillStyle = "#fbcfe8";
+            ctx.beginPath();
+            ctx.arc(x + 30, y + 12, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 5. Ojos
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(x + 24, y + 8, 3, 3);
+            ctx.fillRect(x + 33, y + 8, 3, 3);
+
+            // 6. El Pelo y LA BARBA (Estilo realista vectorizado en tonos castaños)
+            ctx.fillStyle = "#451a03"; // Marrón oscuro base
+            ctx.beginPath();
+            // Pelo superior
+            ctx.arc(x + 30, y + 4, 13, Math.PI, 0);
+            ctx.fill();
+            // Estructura de la Barba completa que cubre la mandíbula
+            ctx.beginPath();
+            ctx.arc(x + 30, y + 14, 12, 0, Math.PI);
+            ctx.fill();
+            
+            // Detalles/Luces en la barba (Marrón más claro para dar realismo)
+            ctx.fillStyle = "#78350f";
+            ctx.fillRect(x + 22, y + 16, 16, 4);
+            ctx.fillRect(x + 26, y + 20, 8, 5);
+
+            ctx.restore();
+        }
+
+        function dibujarObjeto(obj) {
+            ctx.save();
+            ctx.translate(obj.x + obj.ancho / 2, obj.y + obj.alto / 2);
+            ctx.rotate(obj.angulo);
+
+            const rX = -obj.ancho / 2;
+            const rY = -obj.alto / 2;
+
+            switch(obj.tipo) {
+                // --- COMPONENTES BUENOS ---
+                case "RAM":
+                    ctx.fillStyle = "#047857"; // Placa verde
+                    ctx.fillRect(rX, rY + 10, 40, 20);
+                    ctx.fillStyle = "#1e293b"; // Chips integrados
+                    ctx.fillRect(rX + 4, rY + 14, 6, 12);
+                    ctx.fillRect(rX + 13, rY + 14, 6, 12);
+                    ctx.fillRect(rX + 21, rY + 14, 6, 12);
+                    ctx.fillRect(rX + 30, rY + 14, 6, 12);
+                    ctx.fillStyle = "#fbbf24"; // Pines dorados
+                    ctx.fillRect(rX, rY + 28, 40, 2);
+                    break;
+
+                case "GPU":
+                    ctx.fillStyle = "#1e293b"; // Cuerpo de la gráfica
+                    ctx.fillRect(rX, rY + 5, 40, 28);
+                    ctx.fillStyle = "#475569"; // Ventilador central
+                    ctx.beginPath();
+                    ctx.arc(rX + 20, rY + 19, 9, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.strokeStyle = "#94a3b8"; // Aspas texturizadas
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = "#dc2626"; // Detalles gaming rojos
+                    ctx.fillRect(rX + 2, rY + 8, 6, 3);
+                    break;
+
+                case "CPU":
+                    ctx.fillStyle = "#94a3b8"; // Encapsulado metálico exterior
+                    ctx.fillRect(rX + 4, rY + 4, 32, 32);
+                    ctx.fillStyle = "#cbd5e1"; // Centro plateado interno
+                    ctx.fillRect(rX + 8, rY + 8, 24, 24);
+                    ctx.fillStyle = "#0284c7"; // Núcleo de silicio reflectante
+                    ctx.fillRect(rX + 14, rY + 14, 12, 12);
+                    break;
+
+                case "FUENTE":
+                    ctx.fillStyle = "#111827"; // Chasis negro de la fuente
+                    ctx.fillRect(rX + 2, rY + 2, 36, 36);
+                    ctx.fillStyle = "#374151"; // Rejilla circular
+                    ctx.beginPath();
+                    ctx.arc(rX + 20, rY + 20, 11, 0, Math.PI*2);
+                    ctx.fill();
+                    // Simulación de cables saliendo
+                    ctx.strokeStyle = "#e11d48"; ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.moveTo(rX + 34, rY + 34); ctx.lineTo(rX + 44, rY + 40); ctx.stroke();
+                    ctx.strokeStyle = "#fbbf24";
+                    ctx.beginPath(); ctx.moveTo(rX + 30, rY + 34); ctx.lineTo(rX + 40, rY + 44); ctx.stroke();
+                    break;
+
+                case "SSD":
+                    ctx.fillStyle = "#334155"; // Carcasa sólida
+                    ctx.fillRect(rX + 2, rY + 6, 36, 26);
+                    ctx.fillStyle = "#2563eb"; // Etiqueta corporativa azul
+                    ctx.fillRect(rX + 6, rY + 10, 28, 10);
+                    ctx.fillStyle = "#ffffff"; // Texto simulado de marca
+                    ctx.fillRect(rX + 8, rY + 12, 12, 2);
+                    break;
+
+                // --- OBJETOS DAÑINOS (BASURA) ---
+                case "MANZANA":
+                    ctx.fillStyle = "#dc2626"; // Manzana roja
+                    ctx.beginPath(); ctx.arc(rX + 18, rY + 22, 12, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(rX + 24, rY + 22, 12, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = "#15803d"; // Rabito/Hoja verde
+                    ctx.fillRect(rX + 20, rY + 6, 3, 6);
+                    // El mordisco clásico de Apple en gris oscuro
+                    ctx.fillStyle = "#020617";
+                    ctx.beginPath(); ctx.arc(rX + 34, rY + 22, 6, 0, Math.PI*2); ctx.fill();
+                    break;
+
+                case "PLATANO":
+                    ctx.strokeStyle = "#eab308"; ctx.lineWidth = 7; ctx.lineCap = "round"; // Cuerpo curvo
+                    ctx.beginPath();
+                    ctx.arc(rX + 20, rY + 15, 14, 0.2, Math.PI - 0.5);
+                    ctx.stroke();
+                    ctx.fillStyle = "#78350f"; // Punta marrón
+                    ctx.fillRect(rX + 31, rY + 21, 4, 4);
+                    break;
+
+                case "ZAPATO":
+                    ctx.fillStyle = "#b45309"; // Zapato marrón viejo
+                    ctx.fillRect(rX + 4, rY + 18, 32, 14);
+                    ctx.fillRect(rX + 6, rY + 8, 16, 12);
+                    ctx.fillStyle = "#0f172a"; // Suela desgastada
+                    ctx.fillRect(rX + 2, rY + 30, 35, 4);
+                    break;
+
+                case "PIZZA":
+                    ctx.fillStyle = "#d97706"; // Borde de la masa
+                    ctx.beginPath();
+                    ctx.moveTo(rX + 20, rY + 4); ctx.lineTo(rX + 4, rY + 34); ctx.lineTo(rX + 36, rY + 34);
+                    ctx.closePath(); ctx.fill();
+                    ctx.fillStyle = "#fef08a"; // Queso fundido amarillo
+                    ctx.beginPath();
+                    ctx.moveTo(rX + 20, rY + 9); ctx.lineTo(rX + 8, rY + 32); ctx.lineTo(rX + 32, rY + 32);
+                    ctx.closePath(); ctx.fill();
+                    ctx.fillStyle = "#dc2626"; // Rodajas de Pepperoni
+                    ctx.beginPath(); ctx.arc(rX + 20, rY + 24, 3, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(rX + 15, rY + 18, 2.5, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(rX + 24, rY + 28, 2.5, 0, Math.PI*2); ctx.fill();
+                    break;
+            }
+
+            ctx.restore();
         }
 
         function dibujar() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar al protagonista (Daniel con barba)
+            dibujarJugador(jugador.x, jugador.y);
 
-            // DIBUJAR JUGADOR: Monigote con barba
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = varColor('--texto-principal');
-
-            // Cabeza
-            ctx.beginPath();
-            ctx.arc(jugador.x + 25, jugador.y + 15, 10, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // DETALLE: La Barba (Marrón/Oscura)
-            ctx.fillStyle = "#451a03";
-            ctx.beginPath();
-            ctx.arc(jugador.x + 25, jugador.y + 18, 9, 0, Math.PI);
-            ctx.fill();
-
-            // Cuerpo (Línea vertical)
-            ctx.beginPath();
-            ctx.moveTo(jugador.x + 25, jugador.y + 25);
-            ctx.lineTo(jugador.x + 25, jugador.y + 45);
-            ctx.stroke();
-
-            // Brazos abiertos para coger componentes
-            ctx.beginPath();
-            ctx.moveTo(jugador.x + 5, jugador.y + 30);
-            ctx.lineTo(jugador.x + 45, jugador.y + 30);
-            ctx.stroke();
-
-            // Piernas
-            ctx.beginPath();
-            ctx.moveTo(jugador.x + 25, jugador.y + 45);
-            ctx.lineTo(jugador.x + 15, jugador.y + 60);
-            ctx.moveTo(jugador.x + 25, jugador.y + 45);
-            ctx.lineTo(jugador.x + 35, jugador.y + 60);
-            ctx.stroke();
-
-            // DIBUJAR OBJETOS CAYENDO
-            ctx.font = "16px sans-serif";
-            objetos.forEach(obj => {
-                ctx.fillStyle = "#ffffff";
-                ctx.fillText(obj.texto, obj.x, obj.y);
-            });
-        }
-
-        function varColor(name) {
-            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            // Dibujar todos los objetos activos con su render vectorizado y rotación
+            objetos.forEach(obj => dibujarObjeto(obj));
         }
 
         function buclePrincipal() {
@@ -383,9 +584,6 @@
             dibujar();
             requestAnimationFrame(buclePrincipal);
         }
-
-        // Arrancar juego
-        buclePrincipal();
     </script>
 </body>
 </html>
