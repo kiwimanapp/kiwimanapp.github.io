@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiwiman | El Constructor de PC</title>
+    <style>
+        :root {
+            --bg-principal: #0f172a;
+            --bg-tarjeta: #1e293b;
+            --texto-principal: #f8fafc;
+            --accent: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            padding: 10px;
+        }
+
+        /* Barra Superior */
+        .barra-superior {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 10px;
+        }
+
+        .btn-volver {
+            background-color: var(--bg-tarjeta);
+            color: var(--texto-principal);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-volver:hover {
+            background-color: #334155;
+        }
+
+        /* Contenedor del Juego */
+        .juego-layout {
+            display: flex;
+            gap: 20px;
+            background-color: var(--bg-tarjeta);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            max-width: 950px;
+            width: 100%;
+        }
+
+        canvas {
+            background-color: #020617;
+            border-radius: 8px;
+            cursor: none;
+        }
+
+        /* Panel Lateral del Estado del PC */
+        .panel-pc {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #020617;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .pc-preview {
+            width: 120px;
+            height: 140px;
+            border: 3px dashed #334155;
+            margin: 20px 0;
+            position: relative;
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        /* Simulación visual de llenado */
+        .pc-llenado {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--accent);
+            height: 0%;
+            transition: height 0.3s;
+            opacity: 0.4;
+            border-radius: 0 0 4px 4px;
+        }
+
+        /* Pantallas Emergentes (Game Over / Victoria) */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border-radius: 12px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .oculto { display: none !important; }
+
+        .btn-accion {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-accion:hover { background-color: #059669; }
+        
+        .bocadillo {
+            background: white;
+            color: black;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            max-width: 180px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="barra-superior">
+        <h2>🛠️ Ensambla el PC Perfecto</h2>
+        <a href="index.html" class="btn-volver">← Volver al Inicio (Index)</a>
+    </div>
+
+    <div class="juego-layout" style="position: relative;">
+        
+        <!-- PANTALLA GAME OVER -->
+        <div id="pantalla-gameover" class="overlay oculto">
+            <h1 style="color: var(--danger); font-size: 2.5rem; margin-bottom: 10px;">¡PC EN LLAMAS! 🔥</h1>
+            <!-- Simulación de PC quemado usando CSS -->
+            <div style="font-size: 5rem; margin: 15px;">💥🖥️🔥</div>
+            <p style="color: var(--texto-secundario);">Has metido componentes incompatibles y la fuente ha explotado.</p>
+            <button class="btn-accion" onclick="reiniciarJuego()">Volver a Intentarlo</button>
+        </div>
+
+        <!-- PANTALLA VICTORIA -->
+        <div id="pantalla-victoria" class="overlay oculto">
+            <h1 style="color: var(--accent); font-size: 2.5rem; margin-bottom: 10px;">¡Enhorabuena! 🎉</h1>
+            <div style="font-size: 5rem; margin: 15px;">🚀🖥️✨</div>
+            <p style="color: var(--texto-secundario);">¡Has montado un equipo estable y optimizado al 100%!</p>
+            <button class="btn-accion" onclick="reiniciarJuego()">Volver a Jugar</button>
+        </div>
+
+        <!-- ÁREA DEL JUEGO -->
+        <canvas id="canvasJuego" width="600" height="450"></canvas>
+
+        <!-- PANEL LATERAL -->
+        <div class="panel-pc">
+            <div id="texto-bocadillo" class="bocadillo">¡Vamos a montar ese PC! Coge las piezas buenas.</div>
+            <h3>Estado del Montaje</h3>
+            <div class="pc-preview">
+                <div id="barraProgreso" class="pc-llenado"></div>
+                <div style="font-size: 3rem; text-align: center; line-height: 140px; filter: grayscale(100%); opacity: 0.3;">🖥️</div>
+            </div>
+            <p id="contador-piezas">Piezas: 0 / 5</p>
+            <p id="contador-fallos" style="color: var(--danger); margin-top: 10px; font-weight: bold;">Fallos: 0 / 3</p>
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvasJuego");
+        const ctx = canvas.getContext("2d");
+
+        // Configuración inicial del jugador (Monigote con barba)
+        const jugador = {
+            x: 270,
+            y: 390,
+            ancho: 50,
+            alto: 60,
+            velocidad: 8
+        };
+
+        // Tipos de objetos que caen
+        const ITEMS_BUENOS = ["💾 RAM", "🎴 GPU", "🔲 CPU", "🔌 Fuente", "🗄️ SSD"];
+        const ITEMS_MALOS = ["🍎 Manzana Mordida", "🍌 Plátano", "👟 Zapato Viejo", "🍕 Pizza Fría"];
+
+        let objetos = [];
+        let piezasLogradas = 0;
+        let fallos = 0;
+        let juegoActivo = true;
+        let spawnTimer = 0;
+
+        // Captura de movimiento (Teclado y Ratón para comodidad)
+        let teclas = {};
+        window.addEventListener("keydown", (e) => teclas[e.code] = true);
+        window.addEventListener("keyup", (e) => teclas[e.code] = false);
+        canvas.addEventListener("mousemove", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            let mouseX = e.clientX - rect.left;
+            if(mouseX > 0 && mouseX < canvas.width) {
+                jugador.x = mouseX - jugador.ancho / 2;
+            }
+        });
+
+        function crearObjeto() {
+            const esBueno = Math.random() > 0.4; // 60% probabilidad de pieza buena
+            const nombre = esBueno 
+                ? ITEMS_BUENOS[Math.floor(Math.random() * ITEMS_BUENOS.length)]
+                : ITEMS_MALOS[Math.floor(Math.random() * ITEMS_MALOS.length)];
+            
+            objetos.push({
+                x: Math.random() * (canvas.width - 80) + 10,
+                y: -20,
+                texto: nombre,
+                esBueno: esBueno,
+                velocidad: Math.random() * 2 + 3
+            });
+        }
+
+        function actualizarMensajeBocadillo() {
+            const bocadillo = document.getElementById("texto-bocadillo");
+            if (fallos === 1) {
+                bocadillo.innerText = "🧔: Creo que eso no te va a valer...";
+            } else if (fallos === 2) {
+                bocadillo.innerText = "🧔: Eso no creo que sea un componente...";
+            } else if (piezasLogradas > 0 && fallos < 3) {
+                bocadillo.innerText = "🧔: ¡Buen componente! Seguimos.";
+            }
+        }
+
+        function actualizarInterfaz() {
+            document.getElementById("contador-piezas").innerText = `Piezas: ${piezasLogradas} / 5`;
+            document.getElementById("contador-fallos").innerText = `Fallos: ${fallos} / 3`;
+            document.getElementById("barraProgreso").style.height = `${(piezasLogradas / 5) * 100}%`;
+        }
+
+        function terminarJuego(victoria) {
+            juegoActivo = false;
+            if(victoria) {
+                document.getElementById("pantalla-victoria").classList.remove("oculto");
+            } else {
+                document.getElementById("pantalla-gameover").classList.remove("oculto");
+            }
+        }
+
+        function reiniciarJuego() {
+            objetos = [];
+            piezasLogradas = 0;
+            fallos = 0;
+            juegoActivo = true;
+            document.getElementById("texto-bocadillo").innerText = "🧔: ¡Vamos a montar ese PC! Coge las piezas buenas.";
+            document.getElementById("pantalla-victoria").classList.add("oculto");
+            document.getElementById("pantalla-gameover").classList.add("oculto");
+            actualizarInterfaz();
+            buclePrincipal();
+        }
+
+        function moverYDetectarColisiones() {
+            // Controles por teclado
+            if (teclas["ArrowLeft"] && jugador.x > 0) jugador.x -= jugador.velocidad;
+            if (teclas["ArrowRight"] && jugador.x < canvas.width - jugador.ancho) jugador.x += jugador.velocidad;
+
+            // Gestión de objetos cayendo
+            spawnTimer++;
+            if(spawnTimer % 50 === 0) crearObjeto();
+
+            for(let i = objetos.length - 1; i >= 0; i--) {
+                let obj = objetos[i];
+                obj.y += obj.velocidad;
+
+                // Detección de colisión con el jugador
+                if (obj.y + 15 >= jugador.y && obj.y <= jugador.y + jugador.alto &&
+                    obj.x + 40 >= jugador.x && obj.x <= jugador.x + jugador.ancho) {
+                    
+                    if(obj.esBueno) {
+                        piezasLogradas++;
+                        if(piezasLogradas >= 5) terminarJuego(true);
+                    } else {
+                        fallos++;
+                        if(fallos >= 3) terminarJuego(false);
+                    }
+                    actualizarMensajeBocadillo();
+                    actualizarInterfaz();
+                    objetos.splice(i, 1);
+                    continue;
+                }
+
+                // Si cae al suelo se elimina sin penalizar (solo penaliza coger lo malo)
+                if(obj.y > canvas.height) {
+                    objetos.splice(i, 1);
+                }
+            }
+        }
+
+        function dibujar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // DIBUJAR JUGADOR: Monigote con barba
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = varColor('--texto-principal');
+
+            // Cabeza
+            ctx.beginPath();
+            ctx.arc(jugador.x + 25, jugador.y + 15, 10, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // DETALLE: La Barba (Marrón/Oscura)
+            ctx.fillStyle = "#451a03";
+            ctx.beginPath();
+            ctx.arc(jugador.x + 25, jugador.y + 18, 9, 0, Math.PI);
+            ctx.fill();
+
+            // Cuerpo (Línea vertical)
+            ctx.beginPath();
+            ctx.moveTo(jugador.x + 25, jugador.y + 25);
+            ctx.lineTo(jugador.x + 25, jugador.y + 45);
+            ctx.stroke();
+
+            // Brazos abiertos para coger componentes
+            ctx.beginPath();
+            ctx.moveTo(jugador.x + 5, jugador.y + 30);
+            ctx.lineTo(jugador.x + 45, jugador.y + 30);
+            ctx.stroke();
+
+            // Piernas
+            ctx.beginPath();
+            ctx.moveTo(jugador.x + 25, jugador.y + 45);
+            ctx.lineTo(jugador.x + 15, jugador.y + 60);
+            ctx.moveTo(jugador.x + 25, jugador.y + 45);
+            ctx.lineTo(jugador.x + 35, jugador.y + 60);
+            ctx.stroke();
+
+            // DIBUJAR OBJETOS CAYENDO
+            ctx.font = "16px sans-serif";
+            objetos.forEach(obj => {
+                ctx.fillStyle = "#ffffff";
+                ctx.fillText(obj.texto, obj.x, obj.y);
+            });
+        }
+
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function buclePrincipal() {
+            if(!juegoActivo) return;
+            moverYDetectarColisiones();
+            dibujar();
+            requestAnimationFrame(buclePrincipal);
+        }
+
+        // Arrancar juego
+        buclePrincipal();
+    </script>
+</body>
+</html>
