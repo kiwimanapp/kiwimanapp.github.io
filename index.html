@@ -2,370 +2,169 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiwiman | Portafolio Técnico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kiwiman Hub</title>
+    <!-- ICONO DE LA BARRA DEL NAVEGADOR CONFIGURADO EXACTAMENTE CON TU NUEVO NOMBRE -->
     <link rel="icon" type="image/x-icon" href="Gemini_Generated_Image_.ico">
+    
     <style>
-        /* Variables de color para mantener el modo oscuro */
         :root {
             --bg-principal: #0f172a;
             --bg-tarjeta: #1e293b;
             --texto-principal: #f8fafc;
+            --accent: #10b981;
+            --kiwi-blue: #2563eb;
             --texto-secundario: #94a3b8;
-            --accent: #10b981; /* Verde éxito/tecnológico */
-            --accent-hover: #059669;
+            --border-color: #334155;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
             background-color: var(--bg-principal);
             color: var(--texto-principal);
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
             padding: 20px;
         }
 
-        .contenedor {
+        .contenedor-hub {
+            width: 100%;
             max-width: 800px;
-            margin: 40px auto;
-        }
-
-        /* Cabecera */
-        header {
             text-align: center;
-            margin-bottom: 48px;
+            background-color: var(--bg-tarjeta);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
-        header h1 {
+        .cabecera-hub {
+            margin-bottom: 35px;
+        }
+
+        .cabecera-hub h1 {
             font-size: 2.5rem;
             color: var(--texto-principal);
             margin-bottom: 8px;
-        }
-
-        header .subtitulo {
-            font-size: 1.2rem;
-            color: var(--accent);
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-
-        header p {
-            color: var(--texto-secundario);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Secciones Generales */
-        section {
-            margin-bottom: 40px;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--bg-tarjeta);
-            padding-bottom: 8px;
-            color: var(--texto-principal);
-        }
-
-        h3.categoria-skills {
-            font-size: 1.05rem;
-            color: var(--texto-secundario);
-            margin: 16px 0 10px 0;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Bloque de Habilidades (Etiquetas) */
-        .skills-grid {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .skill-tag {
-            background-color: var(--bg-tarjeta);
-            color: var(--texto-principal);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            border: 1px solid #334155;
-        }
-
-        /* Tarjeta de Proyecto y Experiencia */
-        .tarjeta-item {
-            background-color: var(--bg-tarjeta);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 16px;
-            transition: transform 0.2s;
-        }
-
-        .tarjeta-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .item-cabecera {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .item-cabecera h3 {
-            font-size: 1.25rem;
-            color: var(--texto-principal);
-        }
-
-        .badge {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--accent);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .badge-alt {
-            background-color: rgba(148, 163, 184, 0.1);
+        .cabecera-hub p {
             color: var(--texto-secundario);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 1rem;
         }
 
-        .tarjeta-item p {
-            color: var(--texto-secundario);
-            margin-bottom: 0px;
-            font-size: 0.95rem;
-        }
-
-        .tarjeta-item ul {
-            margin-top: 8px;
-            padding-left: 20px;
-            color: var(--texto-secundario);
-            font-size: 0.95rem;
-        }
-
-        .tarjeta-item ul li {
-            margin-bottom: 4px;
-        }
-
-        /* Grid para dos columnas (Estudios e Idiomas) */
-        .grid-dos-columnas {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .grid-proyectos {
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
-        @media (max-width: 600px) {
-            .grid-dos-columnas {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Botones */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            background-color: var(--accent);
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 8px;
+        .card-proyecto {
+            background: #111827;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.2s;
-            margin-top: 16px;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+            transition: all 0.25s ease;
+            cursor: pointer;
         }
 
-        .btn:hover {
-            background-color: var(--accent-hover);
+        .card-proyecto:hover {
+            border-color: var(--kiwi-blue);
+            transform: translateY(-2px);
+            background: #151f32;
         }
 
-        .btn-contacto {
-            display: block;
-            width: max-content;
-            margin: 0 auto;
-            background-color: transparent;
-            border: 2px solid var(--accent);
-            color: var(--accent);
-            margin-top: 0px;
-        }
-
-        .btn-contacto:hover {
-            background-color: var(--accent);
-            color: #ffffff;
-        }
-        
-        .btn-juego {
-            background-color: transparent;
-            border: 2px solid var(--accent);
-            color: var(--accent);
-        }
-        
-        .btn-juego:hover {
-            background-color: var(--accent);
-            color: #ffffff;
-        }
-        
-        /* Pie de página */
-        footer {
+        .card-proyecto .icon-box {
+            font-size: 2.5rem;
+            background: var(--bg-tarjeta);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            min-width: 70px;
             text-align: center;
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--bg-tarjeta);
+        }
+
+        .card-proyecto-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+            color: var(--texto-principal);
+        }
+
+        .card-proyecto-info p {
             color: var(--texto-secundario);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .pie-pagina {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--texto-secundario);
+        }
+
+        @media (min-width: 600px) {
+            .grid-proyectos {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="contenedor">
-
-        <header>
-            <h1>Daniel Pozo</h1>
-            <div class="subtitulo">Soporte Técnico, Redes & Desarrollador Multidisciplinar</div>
-            <p>Especialista en soluciones microinformáticas, hardware, recuperación de datos y desarrollo nativo de aplicaciones móviles y videojuegos en Unity.</p>
-        </header>
-
-        <section>
-            <h2>Competencias Técnicas</h2>
-            
-            <h3 class="categoria-skills">Desarrollo de Software y Web</h3>
-            <div class="skills-grid">
-                <div class="skill-tag">Android Studio (Java / Kotlin)</div>
-                <div class="skill-tag">Unity (Creación de Videojuegos)</div>
-                <div class="skill-tag">Diseño y Creación Web (HTML/CSS)</div>
-                <div class="skill-tag">Control de Versiones (Git / GitHub)</div>
-            </div>
-
-            <h3 class="categoria-skills">Soporte IT, Hardware y Sistemas</h3>
-            <div class="skills-grid">
-                <div class="skill-tag">Reparación de Smartphones, Tablets y PC</div>
-                <div class="skill-tag">Montaje Avanzado de Equipos</div>
-                <div class="skill-tag">Extracción e Informática Forense de Discos Duros</div>
-                <div class="skill-tag">Helpdesk, CAU y Soporte Front-Office</div>
-                <div class="skill-tag">Administración de Redes e Infraestructura VPN</div>
-            </div>
-
-            <h3 class="categoria-skills">Modelado 3D, Diseño y Ofimática</h3>
-            <div class="skills-grid">
-                <div class="skill-tag">Blender (Modelado y Renderizado 3D)</div>
-                <div class="skill-tag">Sweet Home 3D (Diseño de Espacios)</div>
-                <div class="skill-tag">Adobe Photoshop</div>
-                <div class="skill-tag">Bases de Datos (Microsoft Access / SQLite)</div>
-                <div class="skill-tag">Microsoft Excel y Word Avanzado</div>
-            </div>
-        </section>
-
-        <section>
-            <h2>Proyectos Destacados</h2>
-            
-            <div class="tarjeta-item">
-                <div class="item-cabecera">
-                    <h3>Mis Enlaces</h3>
-                    <span class="badge">Google Play</span>
-                </div>
-                <p style="margin-bottom: 12px;">Aplicación móvil nativa diseñada para centralizar, organizar y acceder de forma rápida a enlaces de interés. Enfocada en la productividad personal, ofreciendo una interfaz limpia, categorización eficiente y almacenamiento local optimizado.</p>
-                <a href="https://play.google.com/store/apps/developer?id=kiwiman" target="_blank" class="btn">
-                    Ver en Google Play →
-                </a>
-            </div>
-
-            <div class="tarjeta-item" style="border-color: var(--accent);">
-                <div class="item-cabecera">
-                    <h3>El Constructor de PC</h3>
-                    <span class="badge" style="background-color: rgba(16, 185, 129, 0.2);">Minijuego 🎮</span>
-                </div>
-                <p style="margin-bottom: 12px;">Desarrollo interactivo experimental programado de forma nativa en la web utilizando HTML5 Canvas y JavaScript. Pon a prueba tus reflejos ayudando a mi avatar con barba a capturar los componentes informáticos correctos para ensamblar un ordenador estable y evitar que explote.</p>
-                <a href="juego.html" class="btn btn-juego">
-                    ¡Jugar ahora mismo! 🚀
-                </a>
-            </div>
-        </section>
-
-        <section>
-            <h2>Experiencia Laboral</h2>
-            
-            <div class="tarjeta-item">
-                <div class="item-cabecera">
-                    <h3>Technical Support Front Office (SOHO)</h3>
-                    <span class="badge">Actualidad</span>
-                </div>
-                <p>Receptor de llamadas vinculadas con soporte técnico especializado, gestión comercial y atención al cliente integral.</p>
-            </div>
-
-            <div class="tarjeta-item">
-                <div class="item-cabecera">
-                    <h3>Helpdesk CAU</h3>
-                    <span class="badge-alt">Soporte IT</span>
-                </div>
-                <p>Resolución de incidencias vía telemática orientada a empleados en modal de teletrabajo. Gestión del flujo de soporte técnico completo:</p>
-                <ul>
-                    <li>Apertura y seguimiento de tickets.</li>
-                    <li>Instalación y despliegue de software corporativo.</li>
-                    <li>Configuración y aseguramiento de redes VPN.</li>
-                </ul>
-            </div>
-
-            <div class="tarjeta-item">
-                <div class="item-cabecera">
-                    <h3>Teleoperador BO</h3>
-                    <span class="badge-alt">Gestión</span>
-                </div>
-                <p>Gestión de incidencias técnicas avanzadas, control de calidad en los procesos y resolución ágil de requerimientos de usuarios.</p>
-            </div>
-        </section>
-
-        <div class="grid-dos-columnas">
-            <section>
-                <h2>Datos Académicos</h2>
-                <div class="tarjeta-item">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 4px;">Grado Medio en Sistemas Microinformáticos y Redes</h3>
-                    <p style="font-size: 0.9rem; color: var(--accent);">I.E.S. Doñana</p>
-                </div>
-                <div class="tarjeta-item">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 4px;">Bachillerato</h3>
-                    <p style="font-size: 0.9rem; color: var(--texto-secundario);">I.E.S. Francisco Pacheco</p>
-                </div>
-            </section>
-
-            <section>
-                <h2>Idiomas</h2>
-                <div class="tarjeta-item">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 4px;">Castellano</h3>
-                    <p>Nativo</p>
-                </div>
-                <div class="tarjeta-item">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 4px;">Inglés</h3>
-                    <p>Nivel básico funcional</p>
-                </div>
-            </section>
+    <div class="contenedor-hub">
+        
+        <div class="cabecera-hub">
+            <h1>🥝 Kiwiman Web Hub</h1>
+            <p>Accede de forma directa a todas mis aplicaciones y desarrollos independientes</p>
         </div>
 
-        <section style="text-align: center; margin-top: 50px;">
-            <h2>Contacto Profesional</h2>
-            <p style="color: var(--texto-secundario); margin-bottom: 20px;">
-                ¿Quieres colaborar en un proyecto, incorporar soporte técnico especializado o solicitar mi CV completo con referencias?
-            </p>
-            <a href="mailto:kiwimanapp@gmail.com?subject=Contacto%20desde%20Kiwiman.net" class="btn btn-contacto">
-                Enviar un mensaje privado
+        <div class="grid-proyectos">
+            
+            <!-- ACCESO DIRECTO A JUEGO.HTML -->
+            <a href="juego.html" class="card-proyecto">
+                <div class="icon-box">🎮</div>
+                <div class="card-proyecto-info">
+                    <h3>Kiwiman Arcade</h3>
+                    <p>Disfruta de minijuegos retro HTML5 como "El Constructor de PC" o "Kiwi Runner".</p>
+                </div>
             </a>
-        </section>
 
-        <footer>
-            <p>&copy; 2026 Kiwiman. Todos los derechos reservados.</p>
-        </footer>
+            <!-- ENLACE FUTURO: LA APP DE LAS PLANTAS / HUERTO (U OTRO PROYECTO) -->
+            <div class="card-proyecto" style="opacity: 0.7; cursor: not-allowed;" onclick="alert('Próximamente disponible en web y Play Store')">
+                <div class="icon-box">🌱</div>
+                <div class="card-proyecto-info">
+                    <h3>Huerto Urbano App</h3>
+                    <p>Controlador de plantas con diagnóstico semáforo de iluminación y guía de beneficios (En desarrollo).</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="pie-pagina">
+            &copy; 2026 Kiwiman Developments. Todos los derechos reservados.
+        </div>
 
     </div>
 
