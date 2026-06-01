@@ -204,7 +204,18 @@
             background-color: var(--accent);
             color: #ffffff;
         }
-
+        
+        .btn-juego {
+            background-color: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .btn-juego:hover {
+            background-color: var(--accent);
+            color: #ffffff;
+        }
+        
         /* Pie de página */
         footer {
             text-align: center;
@@ -220,14 +231,12 @@
 
     <div class="contenedor">
 
-        <!-- CABECERA -->
         <header>
             <h1>Daniel Pozo</h1>
             <div class="subtitulo">Soporte Técnico, Redes & Desarrollador Multidisciplinar</div>
             <p>Especialista en soluciones microinformáticas, hardware, recuperación de datos y desarrollo nativo de aplicaciones móviles y videojuegos en Unity.</p>
         </header>
 
-        <!-- HABILIDADES CATEGORIZADAS -->
         <section>
             <h2>Competencias Técnicas</h2>
             
@@ -258,9 +267,9 @@
             </div>
         </section>
 
-        <!-- PROYECTOS -->
         <section>
             <h2>Proyectos Destacados</h2>
+            
             <div class="tarjeta-item">
                 <div class="item-cabecera">
                     <h3>Mis Enlaces</h3>
@@ -271,9 +280,19 @@
                     Ver en Google Play →
                 </a>
             </div>
+
+            <div class="tarjeta-item" style="border-color: var(--accent);">
+                <div class="item-cabecera">
+                    <h3>El Constructor de PC</h3>
+                    <span class="badge" style="background-color: rgba(16, 185, 129, 0.2);">Minijuego 🎮</span>
+                </div>
+                <p style="margin-bottom: 12px;">Desarrollo interactivo experimental programado de forma nativa en la web utilizando HTML5 Canvas y JavaScript. Pon a prueba tus reflejos ayudando a mi avatar con barba a capturar los componentes informáticos correctos para ensamblar un ordenador estable y evitar que explote.</p>
+                <a href="juego.html" class="btn btn-juego">
+                    ¡Jugar ahora mismo! 🚀
+                </a>
+            </div>
         </section>
 
-        <!-- EXPERIENCIA LABORAL -->
         <section>
             <h2>Experiencia Laboral</h2>
             
@@ -290,7 +309,7 @@
                     <h3>Helpdesk CAU</h3>
                     <span class="badge-alt">Soporte IT</span>
                 </div>
-                <p>Resolución de incidencias vía telemática orientada a empleados en modalidad de teletrabajo. Gestión del flujo de soporte técnico completo:</p>
+                <p>Resolución de incidencias vía telemática orientada a empleados en modal de teletrabajo. Gestión del flujo de soporte técnico completo:</p>
                 <ul>
                     <li>Apertura y seguimiento de tickets.</li>
                     <li>Instalación y despliegue de software corporativo.</li>
@@ -307,7 +326,6 @@
             </div>
         </section>
 
-        <!-- FORMACIÓN E IDIOMAS -->
         <div class="grid-dos-columnas">
             <section>
                 <h2>Datos Académicos</h2>
@@ -334,7 +352,6 @@
             </section>
         </div>
 
-        <!-- CONTACTO SEGURO -->
         <section style="text-align: center; margin-top: 50px;">
             <h2>Contacto Profesional</h2>
             <p style="color: var(--texto-secundario); margin-bottom: 20px;">
@@ -345,7 +362,6 @@
             </a>
         </section>
 
-        <!-- PIE DE PÁGINA -->
         <footer>
             <p>&copy; 2026 Kiwiman. Todos los derechos reservados.</p>
         </footer>
