@@ -63,7 +63,7 @@
         /* Contenedor Adaptable */
         .juego-layout {
             display: flex;
-            flex-direction: column; /* Por defecto en móvil: uno sobre otro */
+            flex-direction: column;
             gap: 15px;
             background-color: var(--bg-tarjeta);
             padding: 12px;
@@ -80,13 +80,13 @@
             width: 100%;
             height: auto;
             aspect-ratio: 4 / 3;
-            touch-action: none; /* Bloquea el scroll molesto al jugar */
+            touch-action: none;
         }
 
         /* Panel de Puntuación Adaptable */
         .panel-pc {
             display: flex;
-            flex-direction: row; /* En móvil se vuelve una barra horizontal compacta */
+            flex-direction: row;
             justify-content: space-around;
             align-items: center;
             background-color: #020617;
@@ -176,7 +176,7 @@
             font-weight: bold;
             font-size: 0.8rem;
             max-width: 100%;
-            flex-basis: 100%; /* Toma línea completa arriba en el panel móvil */
+            flex-basis: 100%;
         }
 
         .info-stats {
@@ -187,7 +187,7 @@
         /* --- VISTA DE ESCRITORIO --- */
         @media (min-width: 768px) {
             .juego-layout {
-                flex-direction: row; /* Canvas a la izquierda, panel a la derecha */
+                flex-direction: row;
                 height: 480px;
             }
             canvas {
@@ -222,6 +222,7 @@
 
     <div class="juego-layout">
         
+        <!-- PANTALLA INICIAL -->
         <div id="pantalla-inicio" class="overlay">
             <h1 style="font-size: 1.8rem; margin-bottom: 10px;">Elige tu Nivel Técnico 💻</h1>
             <p style="color: var(--texto-secundario); max-width: 450px; font-size: 0.95rem;">
@@ -233,6 +234,7 @@
             </div>
         </div>
 
+        <!-- PANTALLA GAME OVER -->
         <div id="pantalla-gameover" class="overlay oculto">
             <h1 style="color: var(--danger); font-size: 2rem; margin-bottom: 10px;">¡PC EN LLAMAS! 🔥</h1>
             <div style="font-size: 4rem; margin: 10px;">💥🖥️🔥</div>
@@ -240,6 +242,7 @@
             <button class="btn-accion" onclick="volverAlMenu()">Cambiar Modo / Reintentar</button>
         </div>
 
+        <!-- PANTALLA VICTORIA -->
         <div id="pantalla-victoria" class="overlay oculto">
             <h1 style="color: var(--accent); font-size: 2rem; margin-bottom: 10px;">¡Enhorabuena! 🎉</h1>
             <div style="font-size: 4rem; margin: 10px;">🚀🖥️✨</div>
@@ -247,8 +250,10 @@
             <button class="btn-accion" onclick="volverAlMenu()">Volver a Jugar</button>
         </div>
 
+        <!-- ÁREA DEL JUEGO -->
         <canvas id="canvasJuego" width="600" height="450"></canvas>
 
+        <!-- PANEL INFERIOR / LATERAL -->
         <div class="panel-pc">
             <div id="texto-bocadillo" class="bocadillo">¡Selecciona un modo para empezar!</div>
             
@@ -271,7 +276,7 @@
         const canvas = document.getElementById("canvasJuego");
         const ctx = canvas.getContext("2d");
 
-        // Jugador coordinado de forma interna fija
+        // Configuración lógica del jugador
         const jugador = {
             x: 270,
             y: 360,
@@ -298,11 +303,10 @@
         window.addEventListener("keydown", (e) => teclas[e.code] = true);
         window.addEventListener("keyup", (e) => teclas[e.code] = false);
 
-        // --- SISTEMA DE CONTROL TÁCTIL Y RATÓN ADAPTABLE ---
+        // --- CONTROL RESPONSIVO RATÓN Y TÁCTIL ---
         function procesarEntradaX(clientX) {
             if(!juegoActivo) return;
             const rect = canvas.getBoundingClientRect();
-            // Calcula la posición relativa X basada en la escala real del canvas escalado por CSS
             let escalaX = canvas.width / rect.width;
             let mouseX = (clientX - rect.left) * escalaX;
             
@@ -311,24 +315,18 @@
             }
         }
 
-        // Eventos Ratón
         canvas.addEventListener("mousemove", (e) => procesarEntradaX(e.clientX));
-
-        // Eventos Pantalla Táctil Móvil
         canvas.addEventListener("touchstart", (e) => {
             if(e.touches.length > 0) procesarEntradaX(e.touches[0].clientX);
         }, { passive: true });
-
         canvas.addEventListener("touchmove", (e) => {
             if(e.touches.length > 0) procesarEntradaX(e.touches[0].clientX);
         }, { passive: true });
-
 
         function iniciarJuegoConDificultad(dificultad) {
             modoActual = dificultad;
             document.getElementById("pantalla-inicio").classList.add("oculto");
             
-            // Adaptación de tamaño de ícono para pantallas de escritorio
             if(window.innerWidth >= 768) {
                 document.getElementById("icono-monitor-gris").style.lineHeight = "140px";
                 document.getElementById("icono-monitor-gris").style.fontSize = "3rem";
@@ -387,7 +385,6 @@
         }
 
         function terminarJuego(victoria) {
-            juegoActActive = false;
             juegoActivo = false;
             if(victoria) {
                 document.getElementById("pantalla-victoria").classList.remove("oculto");
@@ -449,8 +446,10 @@
             }
         }
 
+        // --- MOTOR GRÁFICO VECTORIAL ---
         function dibujarJugador(x, y) {
             ctx.save();
+            // 1. Piernas y Zapatos
             ctx.fillStyle = "#1e293b"; 
             ctx.fillRect(x + 18, y + 55, 10, 20);
             ctx.fillRect(x + 32, y + 55, 10, 20);
@@ -458,28 +457,42 @@
             ctx.fillRect(x + 14, y + 72, 14, 8);
             ctx.fillRect(x + 32, y + 72, 14, 8);
 
-            ctx.fillStyle = "#2563eb";
+            // 2. Cuerpo: Tu polo negro de confianza
+            ctx.fillStyle = "#111827"; 
             ctx.beginPath();
             ctx.roundRect(x + 12, y + 25, 36, 32, 6);
             ctx.fill();
 
+            // Detalles del cuello del polo
+            ctx.fillStyle = "#1f2937"; 
+            ctx.beginPath();
+            ctx.moveTo(x + 22, y + 25);
+            ctx.lineTo(x + 30, y + 33);
+            ctx.lineTo(x + 38, y + 25);
+            ctx.closePath();
+            ctx.fill();
+
+            // 3. Brazos
             ctx.fillStyle = "#fbcfe8"; 
             ctx.fillRect(x + 2, y + 18, 10, 22); 
             ctx.fillRect(x + 48, y + 18, 10, 22); 
-            ctx.fillStyle = "#2563eb"; 
+            ctx.fillStyle = "#111827"; // Mangas negras
             ctx.fillRect(x + 6, y + 25, 8, 8);
             ctx.fillRect(x + 46, y + 25, 8, 8);
 
+            // 4. Cabeza
             ctx.fillStyle = "#fbcfe8";
             ctx.beginPath();
             ctx.arc(x + 30, y + 12, 12, 0, Math.PI * 2);
             ctx.fill();
 
+            // 5. Ojos
             ctx.fillStyle = "#0f172a";
             ctx.fillRect(x + 24, y + 8, 3, 3);
             ctx.fillRect(x + 33, y + 8, 3, 3);
 
-            ctx.fillStyle = "#451a03"; 
+            // 6. El Pelo y La Barba (Negro/Gris oscuro con volumen)
+            ctx.fillStyle = "#27272a"; 
             ctx.beginPath();
             ctx.arc(x + 30, y + 4, 13, Math.PI, 0);
             ctx.fill();
@@ -487,9 +500,9 @@
             ctx.arc(x + 30, y + 14, 12, 0, Math.PI);
             ctx.fill();
             
-            ctx.fillStyle = "#78350f";
-            ctx.fillRect(x + 22, y + 16, 16, 4);
-            ctx.fillRect(x + 26, y + 20, 8, 5);
+            ctx.fillStyle = "#3f3f46"; 
+            ctx.fillRect(x + 22, y + 15, 16, 4);
+            ctx.fillRect(x + 25, y + 19, 10, 6);
             ctx.restore();
         }
 
