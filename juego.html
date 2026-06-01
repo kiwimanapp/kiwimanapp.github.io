@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Kiwiman | El Constructor de PC</title>
     <style>
         :root {
@@ -12,6 +12,7 @@
             --accent: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
+            --texto-secundario: #94a3b8;
         }
 
         * {
@@ -19,79 +20,87 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
             background-color: var(--bg-principal);
             color: var(--texto-principal);
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             padding: 10px;
+            touch-action: manipulation;
         }
 
+        /* Barra Superior */
         .barra-superior {
             width: 100%;
             max-width: 950px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            margin-bottom: 10px;
+            padding: 5px 0 10px 0;
+        }
+
+        .barra-superior h2 {
+            font-size: 1.2rem;
         }
 
         .btn-volver {
             background-color: var(--bg-tarjeta);
             color: var(--texto-principal);
             border: 1px solid #334155;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 6px;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            transition: all 0.2s;
         }
 
-        .btn-volver:hover { background-color: #334155; }
-
+        /* Contenedor Adaptable */
         .juego-layout {
             display: flex;
-            gap: 20px;
+            flex-direction: column; /* Por defecto en móvil: uno sobre otro */
+            gap: 15px;
             background-color: var(--bg-tarjeta);
-            padding: 15px;
+            padding: 12px;
             border-radius: 12px;
             border: 1px solid #334155;
-            max-width: 950px;
             width: 100%;
-            height: 480px;
+            max-width: 950px;
+            position: relative;
         }
 
         canvas {
             background-color: #020617;
             border-radius: 8px;
-            cursor: none;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            touch-action: none; /* Bloquea el scroll molesto al jugar */
         }
 
+        /* Panel de Puntuación Adaptable */
         .panel-pc {
-            flex: 1;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex-direction: row; /* En móvil se vuelve una barra horizontal compacta */
+            justify-content: space-around;
             align-items: center;
             background-color: #020617;
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
-            min-width: 200px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .pc-preview {
-            width: 120px;
-            height: 140px;
-            border: 3px dashed #334155;
-            margin: 20px 0;
+            width: 50px;
+            height: 60px;
+            border: 2px dashed #334155;
             position: relative;
             background: #1e293b;
             border-radius: 4px;
@@ -105,16 +114,17 @@
             height: 0%;
             transition: height 0.3s;
             opacity: 0.4;
-            border-radius: 0 0 4px 4px;
+            border-radius: 0 0 2px 2px;
         }
 
+        /* Modals / Overlays */
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(15, 23, 42, 0.96);
+            background-color: rgba(15, 23, 42, 0.97);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -133,52 +143,73 @@
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.2s;
+            margin-top: 15px;
         }
-
-        .btn-accion:hover { background-color: #059669; }
 
         .dificultad-container {
             display: flex;
-            gap: 20px;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .btn-dif {
-            padding: 14px 30px;
-            font-size: 1.2rem;
+            padding: 12px 24px;
+            font-size: 1.1rem;
             font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s;
             color: white;
         }
 
-        .btn-dif:hover { transform: scale(1.05); }
         .btn-facil { background-color: var(--accent); }
         .btn-dificil { background-color: var(--danger); }
         
         .bocadillo {
             background: white;
             color: black;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 0.85rem;
-            max-width: 180px;
-            margin-bottom: 10px;
+            font-size: 0.8rem;
+            max-width: 100%;
+            flex-basis: 100%; /* Toma línea completa arriba en el panel móvil */
         }
 
-        .info-modo {
-            font-size: 0.85rem;
-            color: var(--texto-secundario);
-            margin-top: 5px;
+        .info-stats {
+            font-size: 0.9rem;
             font-weight: bold;
+        }
+
+        /* --- VISTA DE ESCRITORIO --- */
+        @media (min-width: 768px) {
+            .juego-layout {
+                flex-direction: row; /* Canvas a la izquierda, panel a la derecha */
+                height: 480px;
+            }
+            canvas {
+                width: 600px;
+                height: 450px;
+            }
+            .panel-pc {
+                flex: 1;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .bocadillo {
+                max-width: 180px;
+                margin-bottom: 10px;
+                flex-basis: auto;
+            }
+            .pc-preview {
+                width: 120px;
+                height: 140px;
+                margin: 20px 0;
+            }
+            .barra-superior h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -186,53 +217,52 @@
 
     <div class="barra-superior">
         <h2>🛠️ Ensambla el PC Perfecto</h2>
-        <a href="index.html" class="btn-volver">← Volver al Inicio (Index)</a>
+        <a href="index.html" class="btn-volver">← Volver al Inicio</a>
     </div>
 
-    <div class="juego-layout" style="position: relative;">
+    <div class="juego-layout">
         
-        <!-- PANTALLA INICIAL -->
         <div id="pantalla-inicio" class="overlay">
-            <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Elige tu Nivel Técnico 💻</h1>
-            <p style="color: var(--texto-secundario); max-width: 500px;">
-                Mueve a Daniel para recolectar el hardware idóneo. ¡Evita coger objetos dañinos o el ordenador arderá!
+            <h1 style="font-size: 1.8rem; margin-bottom: 10px;">Elige tu Nivel Técnico 💻</h1>
+            <p style="color: var(--texto-secundario); max-width: 450px; font-size: 0.95rem;">
+                Arrastra el dedo o usa el ratón para mover a Daniel. ¡Evita coger objetos dañinos o el PC arderá!
             </p>
             <div class="dificultad-container">
-                <button class="btn-dif btn-facil" onclick="iniciarJuegoConDificultad('facil')">Modo Fácil</button>
-                <button class="btn-dif btn-dificil" onclick="iniciarJuegoConDificultad('dificil')">Modo Difícil 🔥</button>
+                <button class="btn-dif btn-facil" onclick="iniciarJuegoConDificultad('facil')">Fácil</button>
+                <button class="btn-dif btn-dificil" onclick="iniciarJuegoConDificultad('dificil')">Difícil 🔥</button>
             </div>
         </div>
 
-        <!-- PANTALLA GAME OVER -->
         <div id="pantalla-gameover" class="overlay oculto">
-            <h1 style="color: var(--danger); font-size: 2.5rem; margin-bottom: 10px;">¡PC EN LLAMAS! 🔥</h1>
-            <div style="font-size: 5rem; margin: 15px;">💥🖥️🔥</div>
-            <p style="color: var(--texto-secundario);">Has metido componentes incompatibles y la fuente ha explotado.</p>
-            <button class="btn-accion" onclick="volverAlMenu()">Cambiar Dificultad / Reintentar</button>
+            <h1 style="color: var(--danger); font-size: 2rem; margin-bottom: 10px;">¡PC EN LLAMAS! 🔥</h1>
+            <div style="font-size: 4rem; margin: 10px;">💥🖥️🔥</div>
+            <p style="color: var(--texto-secundario); font-size: 0.9rem;">Has metido componentes incompatibles y explotó.</p>
+            <button class="btn-accion" onclick="volverAlMenu()">Cambiar Modo / Reintentar</button>
         </div>
 
-        <!-- PANTALLA VICTORIA -->
         <div id="pantalla-victoria" class="overlay oculto">
-            <h1 style="color: var(--accent); font-size: 2.5rem; margin-bottom: 10px;">¡Enhorabuena! 🎉</h1>
-            <div style="font-size: 5rem; margin: 15px;">🚀🖥️✨</div>
-            <p style="color: var(--texto-secundario);">¡Has montado un equipo estable y optimizado al 100%!</p>
+            <h1 style="color: var(--accent); font-size: 2rem; margin-bottom: 10px;">¡Enhorabuena! 🎉</h1>
+            <div style="font-size: 4rem; margin: 10px;">🚀🖥️✨</div>
+            <p style="color: var(--texto-secundario); font-size: 0.9rem;">¡Has montado un equipo estable optimizado al 100%!</p>
             <button class="btn-accion" onclick="volverAlMenu()">Volver a Jugar</button>
         </div>
 
-        <!-- ÁREA DEL JUEGO -->
         <canvas id="canvasJuego" width="600" height="450"></canvas>
 
-        <!-- PANEL LATERAL -->
         <div class="panel-pc">
             <div id="texto-bocadillo" class="bocadillo">¡Selecciona un modo para empezar!</div>
-            <h3>Estado del Montaje</h3>
+            
             <div class="pc-preview">
                 <div id="barraProgreso" class="pc-llenado"></div>
-                <div style="font-size: 3rem; text-align: center; line-height: 140px; filter: grayscale(100%); opacity: 0.3;">🖥️</div>
+                <div id="icono-monitor-gris" style="font-size: 1.8rem; text-align: center; line-height: 60px; filter: grayscale(100%); opacity: 0.2;">🖥️</div>
             </div>
-            <p id="contador-piezas">Piezas: 0 / --</p>
-            <p id="contador-fallos" style="color: var(--danger); margin-top: 5px; font-weight: bold;">Fallos: 0 / 3</p>
-            <div id="badge-dificultad" class="info-modo">Modo: Ninguno</div>
+            
+            <div class="info-stats">
+                <p id="contador-piezas">Piezas: 0 / --</p>
+                <p id="contador-fallos" style="color: var(--danger); margin-top: 2px;">Fallos: 0 / 3</p>
+            </div>
+            
+            <div id="badge-dificultad" style="font-size: 0.85rem; font-weight: bold; color: var(--texto-secundario);">Modo: OFF</div>
         </div>
 
     </div>
@@ -241,16 +271,15 @@
         const canvas = document.getElementById("canvasJuego");
         const ctx = canvas.getContext("2d");
 
-        // Configuración del protagonista avanzado
+        // Jugador coordinado de forma interna fija
         const jugador = {
             x: 270,
             y: 360,
             ancho: 60,
             alto: 80,
-            velocidad: 9
+            velocidad: 10
         };
 
-        // Identificadores de objetos gráficos
         const ITEMS_BUENOS = ["RAM", "GPU", "CPU", "FUENTE", "SSD"];
         const ITEMS_MALOS = ["MANZANA", "PLATANO", "ZAPATO", "PIZZA"];
 
@@ -268,30 +297,54 @@
         let teclas = {};
         window.addEventListener("keydown", (e) => teclas[e.code] = true);
         window.addEventListener("keyup", (e) => teclas[e.code] = false);
-        canvas.addEventListener("mousemove", (e) => {
+
+        // --- SISTEMA DE CONTROL TÁCTIL Y RATÓN ADAPTABLE ---
+        function procesarEntradaX(clientX) {
             if(!juegoActivo) return;
             const rect = canvas.getBoundingClientRect();
-            let mouseX = e.clientX - rect.left;
+            // Calcula la posición relativa X basada en la escala real del canvas escalado por CSS
+            let escalaX = canvas.width / rect.width;
+            let mouseX = (clientX - rect.left) * escalaX;
+            
             if(mouseX > 0 && mouseX < canvas.width) {
                 jugador.x = mouseX - jugador.ancho / 2;
             }
-        });
+        }
+
+        // Eventos Ratón
+        canvas.addEventListener("mousemove", (e) => procesarEntradaX(e.clientX));
+
+        // Eventos Pantalla Táctil Móvil
+        canvas.addEventListener("touchstart", (e) => {
+            if(e.touches.length > 0) procesarEntradaX(e.touches[0].clientX);
+        }, { passive: true });
+
+        canvas.addEventListener("touchmove", (e) => {
+            if(e.touches.length > 0) procesarEntradaX(e.touches[0].clientX);
+        }, { passive: true });
+
 
         function iniciarJuegoConDificultad(dificultad) {
             modoActual = dificultad;
             document.getElementById("pantalla-inicio").classList.add("oculto");
             
+            // Adaptación de tamaño de ícono para pantallas de escritorio
+            if(window.innerWidth >= 768) {
+                document.getElementById("icono-monitor-gris").style.lineHeight = "140px";
+                document.getElementById("icono-monitor-gris").style.fontSize = "3rem";
+            }
+
             if (dificultad === "facil") {
                 objetivoPiezas = 5;
                 velocidadBase = 2.5;
                 frecuenciaSpawn = 55;
-                document.getElementById("badge-dificultad").innerText = "Modo: FÁCIL";
+                document.getElementById("badge-dificultad").innerText = "FÁCIL";
                 document.getElementById("badge-dificultad").style.color = "var(--accent)";
             } else {
                 objetivoPiezas = 8;
                 velocidadBase = 4.5;
                 frecuenciaSpawn = 35;
-                document.getElementById("badge-dificultad").innerText = "Modo: DIFÍCIL 🔥";
+                document.getElementById("badge-dificultad").innerText = "DIFÍCIL 🔥";
                 document.getElementById("badge-dificultad").style.color = "var(--danger)";
             }
             reiniciarEstructuraJuego();
@@ -312,7 +365,7 @@
                 alto: 40,
                 velocidad: Math.random() * 1.5 + velocidadBase,
                 angulo: 0,
-                velocidadRotacion: (Math.random() - 0.5) * 0.05 // Efecto de giro real
+                velocidadRotacion: (Math.random() - 0.5) * 0.06
             });
         }
 
@@ -334,6 +387,7 @@
         }
 
         function terminarJuego(victoria) {
+            juegoActActive = false;
             juegoActivo = false;
             if(victoria) {
                 document.getElementById("pantalla-victoria").classList.remove("oculto");
@@ -347,7 +401,7 @@
             piezasLogradas = 0;
             fallos = 0;
             juegoActivo = true;
-            document.getElementById("texto-bocadillo").innerText = "🧔: ¡Vamos a montar ese PC! Coge las piezas buenas.";
+            document.getElementById("texto-bocadillo").innerText = "🧔: ¡A por las piezas buenas!";
             document.getElementById("pantalla-victoria").classList.add("oculto");
             document.getElementById("pantalla-gameover").classList.add("oculto");
             actualizarInterfaz();
@@ -375,7 +429,6 @@
                 obj.y += obj.velocidad;
                 obj.angulo += obj.velocidadRotacion;
 
-                // Colisión precisa basada en cajas de impacto ajustadas
                 if (obj.y + obj.alto >= jugador.y && obj.y <= jugador.y + jugador.alto &&
                     obj.x + obj.ancho >= jugador.x && obj.x <= jugador.x + jugador.ancho) {
                     
@@ -396,59 +449,47 @@
             }
         }
 
-        // --- MOTOR GRÁFICO VECTORIAL INTEGRADO ---
         function dibujarJugador(x, y) {
             ctx.save();
-            
-            // 1. Piernas y Zapatos
-            ctx.fillStyle = "#1e293b"; // Pantalón oscuro
+            ctx.fillStyle = "#1e293b"; 
             ctx.fillRect(x + 18, y + 55, 10, 20);
             ctx.fillRect(x + 32, y + 55, 10, 20);
-            ctx.fillStyle = "#ffffff"; // Calzado blanco
+            ctx.fillStyle = "#ffffff"; 
             ctx.fillRect(x + 14, y + 72, 14, 8);
             ctx.fillRect(x + 32, y + 72, 14, 8);
 
-            // 2. Cuerpo (Camiseta técnica azul vibrante)
             ctx.fillStyle = "#2563eb";
             ctx.beginPath();
             ctx.roundRect(x + 12, y + 25, 36, 32, 6);
             ctx.fill();
 
-            // 3. Brazos levantados listos para atrapar componentes
-            ctx.fillStyle = "#fbcfe8"; // Tono piel base
-            ctx.fillRect(x + 2, y + 18, 10, 22); // Brazo izq
-            ctx.fillRect(x + 48, y + 18, 10, 22); // Brazo der
-            ctx.fillStyle = "#2563eb"; // Mangas de la camiseta
+            ctx.fillStyle = "#fbcfe8"; 
+            ctx.fillRect(x + 2, y + 18, 10, 22); 
+            ctx.fillRect(x + 48, y + 18, 10, 22); 
+            ctx.fillStyle = "#2563eb"; 
             ctx.fillRect(x + 6, y + 25, 8, 8);
             ctx.fillRect(x + 46, y + 25, 8, 8);
 
-            // 4. Cabeza (Cara)
             ctx.fillStyle = "#fbcfe8";
             ctx.beginPath();
             ctx.arc(x + 30, y + 12, 12, 0, Math.PI * 2);
             ctx.fill();
 
-            // 5. Ojos
             ctx.fillStyle = "#0f172a";
             ctx.fillRect(x + 24, y + 8, 3, 3);
             ctx.fillRect(x + 33, y + 8, 3, 3);
 
-            // 6. El Pelo y LA BARBA (Estilo realista vectorizado en tonos castaños)
-            ctx.fillStyle = "#451a03"; // Marrón oscuro base
+            ctx.fillStyle = "#451a03"; 
             ctx.beginPath();
-            // Pelo superior
             ctx.arc(x + 30, y + 4, 13, Math.PI, 0);
             ctx.fill();
-            // Estructura de la Barba completa que cubre la mandíbula
             ctx.beginPath();
             ctx.arc(x + 30, y + 14, 12, 0, Math.PI);
             ctx.fill();
             
-            // Detalles/Luces en la barba (Marrón más claro para dar realismo)
             ctx.fillStyle = "#78350f";
             ctx.fillRect(x + 22, y + 16, 16, 4);
             ctx.fillRect(x + 26, y + 20, 8, 5);
-
             ctx.restore();
         }
 
@@ -461,120 +502,53 @@
             const rY = -obj.alto / 2;
 
             switch(obj.tipo) {
-                // --- COMPONENTES BUENOS ---
                 case "RAM":
-                    ctx.fillStyle = "#047857"; // Placa verde
-                    ctx.fillRect(rX, rY + 10, 40, 20);
-                    ctx.fillStyle = "#1e293b"; // Chips integrados
-                    ctx.fillRect(rX + 4, rY + 14, 6, 12);
-                    ctx.fillRect(rX + 13, rY + 14, 6, 12);
-                    ctx.fillRect(rX + 21, rY + 14, 6, 12);
-                    ctx.fillRect(rX + 30, rY + 14, 6, 12);
-                    ctx.fillStyle = "#fbbf24"; // Pines dorados
-                    ctx.fillRect(rX, rY + 28, 40, 2);
+                    ctx.fillStyle = "#047857"; ctx.fillRect(rX, rY + 10, 40, 20);
+                    ctx.fillStyle = "#1e293b"; ctx.fillRect(rX + 4, rY + 14, 6, 12);
+                    ctx.fillRect(rX + 13, rY + 14, 6, 12); ctx.fillRect(rX + 21, rY + 14, 6, 12);
+                    ctx.fillStyle = "#fbbf24"; ctx.fillRect(rX, rY + 28, 40, 2);
                     break;
-
                 case "GPU":
-                    ctx.fillStyle = "#1e293b"; // Cuerpo de la gráfica
-                    ctx.fillRect(rX, rY + 5, 40, 28);
-                    ctx.fillStyle = "#475569"; // Ventilador central
-                    ctx.beginPath();
-                    ctx.arc(rX + 20, rY + 19, 9, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.strokeStyle = "#94a3b8"; // Aspas texturizadas
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    ctx.fillStyle = "#dc2626"; // Detalles gaming rojos
-                    ctx.fillRect(rX + 2, rY + 8, 6, 3);
+                    ctx.fillStyle = "#1e293b"; ctx.fillRect(rX, rY + 5, 40, 28);
+                    ctx.fillStyle = "#475569"; ctx.beginPath(); ctx.arc(rX + 20, rY + 19, 9, 0, Math.PI*2); ctx.fill();
+                    ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 2; ctx.stroke();
                     break;
-
                 case "CPU":
-                    ctx.fillStyle = "#94a3b8"; // Encapsulado metálico exterior
-                    ctx.fillRect(rX + 4, rY + 4, 32, 32);
-                    ctx.fillStyle = "#cbd5e1"; // Centro plateado interno
-                    ctx.fillRect(rX + 8, rY + 8, 24, 24);
-                    ctx.fillStyle = "#0284c7"; // Núcleo de silicio reflectante
-                    ctx.fillRect(rX + 14, rY + 14, 12, 12);
+                    ctx.fillStyle = "#94a3b8"; ctx.fillRect(rX + 4, rY + 4, 32, 32);
+                    ctx.fillStyle = "#cbd5e1"; ctx.fillRect(rX + 8, rY + 8, 24, 24);
+                    ctx.fillStyle = "#0284c7"; ctx.fillRect(rX + 14, rY + 14, 12, 12);
                     break;
-
                 case "FUENTE":
-                    ctx.fillStyle = "#111827"; // Chasis negro de la fuente
-                    ctx.fillRect(rX + 2, rY + 2, 36, 36);
-                    ctx.fillStyle = "#374151"; // Rejilla circular
-                    ctx.beginPath();
-                    ctx.arc(rX + 20, rY + 20, 11, 0, Math.PI*2);
-                    ctx.fill();
-                    // Simulación de cables saliendo
-                    ctx.strokeStyle = "#e11d48"; ctx.lineWidth = 2;
-                    ctx.beginPath(); ctx.moveTo(rX + 34, rY + 34); ctx.lineTo(rX + 44, rY + 40); ctx.stroke();
-                    ctx.strokeStyle = "#fbbf24";
-                    ctx.beginPath(); ctx.moveTo(rX + 30, rY + 34); ctx.lineTo(rX + 40, rY + 44); ctx.stroke();
+                    ctx.fillStyle = "#111827"; ctx.fillRect(rX + 2, rY + 2, 36, 36);
+                    ctx.fillStyle = "#374151"; ctx.beginPath(); ctx.arc(rX + 20, rY + 20, 11, 0, Math.PI*2); ctx.fill();
+                    ctx.strokeStyle = "#e11d48"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(rX + 34, rY + 34); ctx.lineTo(rX + 44, rY + 40); ctx.stroke();
                     break;
-
                 case "SSD":
-                    ctx.fillStyle = "#334155"; // Carcasa sólida
-                    ctx.fillRect(rX + 2, rY + 6, 36, 26);
-                    ctx.fillStyle = "#2563eb"; // Etiqueta corporativa azul
-                    ctx.fillRect(rX + 6, rY + 10, 28, 10);
-                    ctx.fillStyle = "#ffffff"; // Texto simulado de marca
-                    ctx.fillRect(rX + 8, rY + 12, 12, 2);
+                    ctx.fillStyle = "#334155"; ctx.fillRect(rX + 2, rY + 6, 36, 26);
+                    ctx.fillStyle = "#2563eb"; ctx.fillRect(rX + 6, rY + 10, 28, 10);
                     break;
-
-                // --- OBJETOS DAÑINOS (BASURA) ---
                 case "MANZANA":
-                    ctx.fillStyle = "#dc2626"; // Manzana roja
-                    ctx.beginPath(); ctx.arc(rX + 18, rY + 22, 12, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(rX + 24, rY + 22, 12, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = "#15803d"; // Rabito/Hoja verde
-                    ctx.fillRect(rX + 20, rY + 6, 3, 6);
-                    // El mordisco clásico de Apple en gris oscuro
-                    ctx.fillStyle = "#020617";
-                    ctx.beginPath(); ctx.arc(rX + 34, rY + 22, 6, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = "#dc2626"; ctx.beginPath(); ctx.arc(rX + 18, rY + 22, 12, 0, Math.PI*2); ctx.fill(); ctx.arc(rX + 24, rY + 22, 12, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = "#15803d"; ctx.fillRect(rX + 20, rY + 6, 3, 6);
+                    ctx.fillStyle = "#020617"; ctx.beginPath(); ctx.arc(rX + 34, rY + 22, 6, 0, Math.PI*2); ctx.fill();
                     break;
-
                 case "PLATANO":
-                    ctx.strokeStyle = "#eab308"; ctx.lineWidth = 7; ctx.lineCap = "round"; // Cuerpo curvo
-                    ctx.beginPath();
-                    ctx.arc(rX + 20, rY + 15, 14, 0.2, Math.PI - 0.5);
-                    ctx.stroke();
-                    ctx.fillStyle = "#78350f"; // Punta marrón
-                    ctx.fillRect(rX + 31, rY + 21, 4, 4);
+                    ctx.strokeStyle = "#eab308"; ctx.lineWidth = 7; ctx.lineCap = "round"; ctx.beginPath(); ctx.arc(rX + 20, rY + 15, 14, 0.2, Math.PI - 0.5); ctx.stroke();
                     break;
-
                 case "ZAPATO":
-                    ctx.fillStyle = "#b45309"; // Zapato marrón viejo
-                    ctx.fillRect(rX + 4, rY + 18, 32, 14);
-                    ctx.fillRect(rX + 6, rY + 8, 16, 12);
-                    ctx.fillStyle = "#0f172a"; // Suela desgastada
-                    ctx.fillRect(rX + 2, rY + 30, 35, 4);
+                    ctx.fillStyle = "#b45309"; ctx.fillRect(rX + 4, rY + 18, 32, 14); ctx.fillRect(rX + 6, rY + 8, 16, 12);
                     break;
-
                 case "PIZZA":
-                    ctx.fillStyle = "#d97706"; // Borde de la masa
-                    ctx.beginPath();
-                    ctx.moveTo(rX + 20, rY + 4); ctx.lineTo(rX + 4, rY + 34); ctx.lineTo(rX + 36, rY + 34);
-                    ctx.closePath(); ctx.fill();
-                    ctx.fillStyle = "#fef08a"; // Queso fundido amarillo
-                    ctx.beginPath();
-                    ctx.moveTo(rX + 20, rY + 9); ctx.lineTo(rX + 8, rY + 32); ctx.lineTo(rX + 32, rY + 32);
-                    ctx.closePath(); ctx.fill();
-                    ctx.fillStyle = "#dc2626"; // Rodajas de Pepperoni
-                    ctx.beginPath(); ctx.arc(rX + 20, rY + 24, 3, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(rX + 15, rY + 18, 2.5, 0, Math.PI*2); ctx.fill();
-                    ctx.beginPath(); ctx.arc(rX + 24, rY + 28, 2.5, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = "#d97706"; ctx.beginPath(); ctx.moveTo(rX + 20, rY + 4); ctx.lineTo(rX + 4, rY + 34); ctx.lineTo(rX + 36, rY + 34); ctx.closePath(); ctx.fill();
+                    ctx.fillStyle = "#fef08a"; ctx.beginPath(); ctx.moveTo(rX + 20, rY + 9); ctx.lineTo(rX + 8, rY + 32); ctx.lineTo(rX + 32, rY + 32); ctx.closePath(); ctx.fill();
                     break;
             }
-
             ctx.restore();
         }
 
         function dibujar() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Dibujar al protagonista (Daniel con barba)
             dibujarJugador(jugador.x, jugador.y);
-
-            // Dibujar todos los objetos activos con su render vectorizado y rotación
             objetos.forEach(obj => dibujarObjeto(obj));
         }
 
