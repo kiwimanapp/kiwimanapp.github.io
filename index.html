@@ -3,512 +3,560 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ideas Hub - Tu Panel de Notas</title>
+    <title>Daniel Pozo | SysAdmin & Dev</title>
     <style>
         :root {
-            --bg-fondo: #0f172a;
-            --bg-tarjeta: #1e293b;
-            --borde: #334155;
-            --texto-principal: #f8fafc;
+            --bg-principal: #0f1319;
+            --bg-tarjeta: #181f2a;
+            --bg-cabecera: #131922;
+            --texto-principal: #f1f5f9;
             --texto-secundario: #94a3b8;
-            --acento: #38bdf8;
-            --acento-hover: #0284c7;
-            --acento-oro: #eab308;
-            --rojo-borrar: #ef4444;
+            --acento-oro: #d4af37;
+            --acento-azul: #38bdf8;
+            --borde: #242f41;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--bg-fondo);
+            background-color: var(--bg-principal);
             color: var(--texto-principal);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 1.5rem;
+            line-height: 1.6;
         }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
+        /* CABECERA (NAVBAR) */
         header {
+            background-color: var(--bg-cabecera);
+            border-bottom: 1px solid var(--borde);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--borde);
-            padding-bottom: 1rem;
         }
 
-        header h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        header h1 span {
-            color: var(--acento);
-        }
-
-        .header-buttons {
+        .brand {
             display: flex;
+            align-items: center;
             gap: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Insignia K Dorada en la cabecera */
+        .brand-badge {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #fee180, #a87914);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111;
+            font-weight: 800;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
+        }
+
+        .brand span {
+            color: var(--texto-secundario);
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        nav {
+            display: flex;
             align-items: center;
         }
 
-        .btn-menu {
-            background: var(--bg-tarjeta);
-            border: 1px solid var(--borde);
-            color: var(--texto-principal);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
+        nav a {
+            color: var(--texto-secundario);
+            text-decoration: none;
+            margin-left: 1.8rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: color 0.3s;
         }
 
-        .btn-menu:hover {
-            border-color: var(--acento);
+        nav a:hover {
+            color: var(--texto-principal);
         }
 
-        /* --- FORMULARIO DE ACCESO DESPLEGABLE --- */
-        #login-drawer {
-            display: none;
-            background: var(--bg-tarjeta);
+        /* Botón de candado especial */
+        nav a#btn-login-toggle {
+            color: var(--acento-oro);
+            cursor: pointer;
+        }
+
+        nav a#btn-login-toggle:hover {
+            color: #fee180;
+        }
+
+        /* SECCIÓN HERO */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem 3rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--texto-secundario);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* SECCIÓN SOBRE MÍ INTEGRADA CON EL LOGO */
+        .contenedor-sobremi {
+            max-width: 1100px;
+            margin: 2rem auto 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .tarjeta-sobremi {
+            background-color: var(--bg-tarjeta);
             border: 1px solid var(--borde);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .drawer-grid {
+        .texto-sobremi h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .texto-sobremi p {
+            color: var(--texto-secundario);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* Contenedor del Logo (Efecto anillo de luz difuminado) */
+        .avatar-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(214,175,55,0.15) 0%, rgba(0,0,0,0) 70%);
+            border: 1px solid rgba(214, 175, 55, 0.2);
+            z-index: 1;
+        }
+
+        .logo-kiwi {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* SECCIÓN PROYECTOS */
+        .seccion {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .seccion-titulo {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grid-proyectos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .tarjeta-proyecto {
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            transition: transform 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tarjeta-proyecto:hover {
+            transform: translateY(-4px);
+            border-color: #334155;
+        }
+
+        .proyecto-icono {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--acento-azul);
+        }
+
+        .tarjeta-proyecto h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tarjeta-proyecto p {
+            color: var(--texto-secundario);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background-color: #1e293b;
+            color: #cbd5e1;
+            padding: 0.3rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid #2e3e56;
+        }
+
+        /* VENTANA FLOTANTE DE ACCESO (MODAL) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(15, 19, 25, 0.85);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-card {
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde);
+            padding: 2.25rem 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+            color: var(--texto-principal);
+            text-align: center;
+            font-weight: 600;
         }
 
         .input-group {
-            flex: 1;
-            min-width: 200px;
+            margin-bottom: 1.25rem;
         }
 
         .input-group label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--texto-secundario);
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 0.6rem;
-            background: #111827;
+            padding: 0.75rem;
+            background: var(--bg-principal);
             border: 1px solid var(--borde);
-            border-radius: 6px;
+            border-radius: 8px;
             color: white;
             font-size: 0.95rem;
             outline: none;
+            transition: border-color 0.3s;
         }
 
         .input-group input:focus {
-            border-color: var(--acento);
+            border-color: var(--acento-azul);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.75rem;
         }
 
         .btn-submit {
-            padding: 0.6rem 1.5rem;
-            background: var(--acento);
-            color: #0f172a;
+            flex: 1;
+            padding: 0.75rem;
+            background-color: var(--acento-azul);
+            color: var(--bg-principal);
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
         }
 
         .btn-submit:hover {
-            background: var(--acento-hover);
+            background-color: #0284c7;
         }
 
-        #login-status {
-            font-size: 0.85rem;
-            margin-top: 0.75rem;
-            color: var(--acento-oro);
-        }
-
-        /* --- BARRA DE HERRAMIENTAS --- */
-        .toolbar {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-tool {
-            background: var(--bg-tarjeta);
+        .btn-cancel {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
             border: 1px solid var(--borde);
-            color: var(--texto-principal);
-            padding: 0.75rem 1.25rem;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .btn-tool:hover {
-            border-color: var(--acento);
-            background: rgba(56, 189, 248, 0.05);
-        }
-
-        /* --- TABLERO DE POST-ITS --- */
-        .board {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .postit {
-            background: var(--bg-tarjeta);
-            border: 1px solid var(--borde);
-            border-top: 4px solid var(--acento);
-            border-radius: 8px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            min-height: 200px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .postit-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
             color: var(--texto-secundario);
-            margin-bottom: 0.75rem;
-        }
-
-        .btn-delete-note {
-            background: transparent;
-            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-
-        .btn-delete-note:hover {
-            opacity: 1;
-        }
-
-        .postit-body {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .postit-body textarea {
-            width: 100%;
-            flex-grow: 1;
-            background: transparent;
-            border: none;
-            color: var(--texto-principal);
-            resize: none;
             font-size: 0.95rem;
-            line-height: 1.4;
-            outline: none;
+            transition: color 0.2s, border-color 0.2s;
         }
 
-        .postit-body img {
-            max-width: 100%;
-            border-radius: 6px;
-            margin-top: 0.25rem;
-            border: 1px solid var(--borde);
+        .btn-cancel:hover {
+            color: var(--texto-principal);
+            border-color: var(--texto-secundario);
         }
 
-        /* Móvil */
-        @media(max-width: 480px) {
-            .toolbar .btn-tool {
-                flex-grow: 1;
-                justify-content: center;
+        /* PIE DE PÁGINA */
+        footer {
+            border-top: 1px solid var(--borde);
+            background-color: var(--bg-cabecera);
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 6rem;
+            color: var(--texto-secundario);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--texto-principal);
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .tarjeta-sobremi {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2.5rem;
+                padding: 2rem;
             }
-            .drawer-grid {
-                flex-direction: column;
-                align-items: stretch;
+            .avatar-wrapper {
+                grid-row: 1;
             }
+            .hero h1 { font-size: 2.4rem; }
+            .hero p { font-size: 1.1rem; }
+        }
+
+        @media (max-width: 600px) {
+            .nav-container { flex-direction: column; gap: 1rem; }
+            nav a { margin: 0 0.75rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Nube de <span>Ideas</span></h1>
-            <div class="header-buttons">
-                <span id="user-display" style="font-size: 0.85rem; color: var(--texto-secundario);"></span>
-                <button class="btn-menu" id="btn-toggle-login">🔑 Iniciar Sesión</button>
+    <!-- NAVEGACIÓN -->
+    <header>
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-badge">K</div>
+                Daniel Pozo <span>• SysAdmin & Dev</span>
             </div>
-        </header>
+            <nav>
+                <a href="#inicio">Inicio</a>
+                <a href="#sobre-mi">Sobre mí</a>
+                <a href="#proyectos">Proyectos</a>
+                <a href="#contacto">Contacto</a>
+                <!-- Icono de candado cerrado añadido -->
+                <a id="btn-login-toggle">🔒 Iniciar sesión</a>
+            </nav>
+        </div>
+    </header>
 
-        <div id="login-drawer">
-            <div class="drawer-grid">
-                <div class="input-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" placeholder="tu-correo@gmail.com">
+    <main id="inicio">
+        <!-- HERO TITULO -->
+        <section class="hero">
+            <h1>Daniel Pozo</h1>
+            <p>Construyendo Infraestructuras Digitales Seguras y Eficientes</p>
+        </section>
+
+        <!-- SOBRE MÍ CON INTEGRACIÓN DE LOGO -->
+        <section id="sobre-mi" class="contenedor-sobremi">
+            <div class="tarjeta-sobremi">
+                <div class="texto-sobremi">
+                    <h2>Sobre Mí</h2>
+                    <p>Técnico en Sistemas Microinformáticos y Redes con una profunda vocación por el desarrollo de software estructurado y la automatización inteligente de sistemas.</p>
+                    <p>Me especializo en el despliegue de soluciones de infraestructura sólidas, la resolución de contingencias críticas en redes y el desarrollo de aplicaciones nativas enfocadas a optimizar flujos de trabajo cotidianos.</p>
                 </div>
-                <div class="input-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" placeholder="••••••••">
+
+                <!-- El logo del Kiwi con su ruta corregida -->
+                <div class="avatar-wrapper">
+                    <img src="logo.png" class="logo-kiwi">
                 </div>
-                <button class="btn-submit" id="btn-manual-login">Conectar</button>
             </div>
-            <div id="login-status"></div>
-        </div>
+        </section>
 
-        <div class="toolbar">
-            <button class="btn-tool" id="tool-text">📝 Nueva Nota</button>
-            <button class="btn-tool" id="tool-photo">📷 Subir Foto</button>
-            <button class="btn-tool" id="tool-draw">🎨 Dibujar Idea</button>
-            <input type="file" id="file-input" accept="image/*" style="display: none;">
-        </div>
+        <!-- PROYECTOS -->
+        <section id="proyectos" class="seccion">
+            <h2 class="seccion-titulo">Proyectos</h2>
+            <div class="grid-proyectos">
 
-        <div class="board" id="notes-board">
-            <p style="grid-column: 1/-1; text-align:center; color:var(--texto-secundario); padding: 2rem;">Sincronizando con la nube...</p>
+                <!-- Tarjeta 1: Skills -->
+                <div class="tarjeta-proyecto">
+                    <div>
+                        <div class="proyecto-icono">⚙️</div>
+                        <h3>Sistemas y Redes</h3>
+                        <p>Gestión de infraestructura IT, administración avanzada de entornos operativos, monitorización de redes locales y auditorías de seguridad perimetral.</p>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Sistemas</span>
+                        <span class="tag">Redes</span>
+                        <span class="tag">Soporte</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Terminal -->
+                <div class="tarjeta-proyecto">
+                    <div>
+                        <div class="proyecto-icono">💻</div>
+                        <h3>Automatización & Scripts</h3>
+                        <p>Diseño y ejecución de scripts personalizados para la optimización de tareas repetitivas, bots de control de flujo y extracción automatizada de datos.</p>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Playwright</span>
+                        <span class="tag">Scripting</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3: Plantaskiwi -->
+                <div class="tarjeta-proyecto">
+                    <div>
+                        <div class="proyecto-icono">🌱</div>
+                        <h3>Plantaskiwi</h3>
+                        <p>Aplicación nativa diseñada para plataformas móviles orientada a medir los rangos de intensidad lumínica ambiental para optimizar el ecosistema vegetal doméstico.</p>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Android</span>
+                        <span class="tag">Kotlin</span>
+                        <span class="tag">XML</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- VENTANA MODAL DE INICIO DE SESIÓN -->
+    <div class="modal-overlay" id="modal-login">
+        <div class="modal-card">
+            <h3>🔒 Acceso de Administrador</h3>
+            <div class="input-group">
+                <label for="login-email">Usuario o Correo</label>
+                <input type="email" id="login-email" placeholder="tu-correo@gmail.com">
+            </div>
+            <div class="input-group">
+                <label for="login-password">Contraseña</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="btn-login-cancel">Cancelar</button>
+                <button class="btn-submit" id="btn-login-submit">Entrar</button>
+            </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, deleteDoc, updateDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- PIE DE PÁGINA / CONTACTO -->
+    <footer id="contacto">
+        <p>© 2026 Daniel Pozo.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--texto-secundario);">
+            Contacto: <a href="mailto: kiwimanapp@gmail.com">kiwimanapp@gmail.com</a>
+        </p>
+    </footer>
 
-        // Tus credenciales de Ideas-hub
-        const firebaseConfig = {
-            apiKey: "AIzaSyC3WTBm1jjukBigbqGoYam6mfbbUHbo7I0",
-            authDomain: "ideas-hub-b052c.firebaseapp.com",
-            projectId: "ideas-hub-b052c",
-            storageBucket: "ideas-hub-b052c.firebasestorage.app",
-            messagingSenderId: "343815956768",
-            appId: "1:343815956768:web:a8a663b4d0f23af0b88f45"
-        };
+    <!-- SCRIPT DE CONTROL PARA EL LOGUIADO -->
+    <script>
+        const modalLogin = document.getElementById('modal-login');
+        const btnToggle = document.getElementById('btn-login-toggle');
+        const btnCancel = document.getElementById('btn-login-cancel');
+        const btnSubmit = document.getElementById('btn-login-submit');
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Mostrar la ventana flotante
+        btnToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            modalLogin.style.display = 'flex';
+        });
 
-        let currentUser = null;
-        let unsubscribeNotes = null;
+        // Ocultar la ventana al pulsar Cancelar
+        btnCancel.addEventListener('click', () => {
+            modalLogin.style.display = 'none';
+        });
 
-        // --- MANEJO DE SESIÓN ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('user-display').textContent = `Conectado: ${user.email}`;
-                listenToNotes();
+        // Ocultar la ventana si se pulsa fuera de la tarjeta de login
+        modalLogin.addEventListener('click', (e) => {
+            if (e.target === modalLogin) {
+                modalLogin.style.display = 'none';
+            }
+        });
+
+        // Lógica del botón Entrar
+        btnSubmit.addEventListener('click', () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            
+            if(email && pass) {
+                // Aquí puedes integrar tu Firebase o backend cuando lo requieras
+                console.log("Intento de login con:", email);
+                modalLogin.style.display = 'none';
             } else {
-                // Si abres la web y no hay sesión activa, entra solo usando tu cuenta por defecto
-                try {
-                    await signInWithEmailAndPassword(auth, "kiwimanapp@gmail.com", "Noelia19");
-                } catch (error) {
-                    console.error("Error en login automático:", error);
-                }
+                alert('Por favor, rellena todos los campos.');
             }
-        });
-
-        // Mostrar / Ocultar el formulario de login de arriba
-        const drawer = document.getElementById('login-drawer');
-        document.getElementById('btn-toggle-login').addEventListener('click', () => {
-            drawer.style.display = drawer.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Ejecutar login manual desde el botón del formulario desplegado
-        document.getElementById('btn-manual-login').addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            const statusDiv = document.getElementById('login-status');
-            
-            if(!email || !pass) {
-                statusDiv.textContent = "Por favor, rellena ambos campos.";
-                return;
-            }
-
-            try {
-                statusDiv.textContent = "Conectando...";
-                if (unsubscribeNotes) unsubscribeNotes(); // Limpiar escucha previa
-                await signInWithEmailAndPassword(auth, email, pass);
-                statusDiv.textContent = "¡Sesión cambiada con éxito!";
-                setTimeout(() => { drawer.style.display = 'none'; statusDiv.textContent = ''; }, 1500);
-            } catch (error) {
-                statusDiv.textContent = "Error: Datos incorrectos o fallo de conexión.";
-            }
-        });
-
-        // --- ESCUCHA DE FIRESTORE EN TIEMPO REAL ---
-        function listenToNotes() {
-            const q = query(
-                collection(db, "notes"), 
-                where("userId", "==", currentUser.uid),
-                orderBy("createdAt", "desc")
-            );
-
-            unsubscribeNotes = onSnapshot(q, (snapshot) => {
-                const board = document.getElementById('notes-board');
-                board.innerHTML = '';
-
-                if (snapshot.empty) {
-                    board.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--texto-secundario); padding: 2rem;">No hay notas todavía. ¡Crea una desde la barra superior!</p>';
-                    return;
-                }
-
-                snapshot.forEach((docSnap) => {
-                    const note = docSnap.data();
-                    const noteId = docSnap.id;
-                    
-                    const postit = document.createElement('div');
-                    postit.className = 'postit';
-                    
-                    if(note.type === 'draw') postit.style.borderTopColor = 'var(--acento-oro)';
-                    if(note.type === 'photo') postit.style.borderTopColor = '#10b981';
-
-                    let bodyContent = '';
-                    if (note.type === 'text') {
-                        bodyContent = `<textarea data-id="${noteId}" placeholder="Escribe tu idea aquí...">${note.content}</textarea>`;
-                    } else {
-                        bodyContent = `<img src="${note.content}"><p style="font-size:0.8rem; margin-top:0.5rem; color:var(--texto-secundario)">${note.caption || ''}</p>`;
-                    }
-
-                    postit.innerHTML = `
-                        <div class="postit-header">
-                            <span>${note.date}</span>
-                            <button class="btn-delete-note" data-id="${noteId}">🗑️</button>
-                        </div>
-                        <div class="postit-body">${bodyContent}</div>
-                    `;
-
-                    if(note.type === 'text') {
-                        postit.querySelector('textarea').addEventListener('change', (e) => {
-                            updateDoc(doc(db, "notes", noteId), { content: e.target.value });
-                        });
-                    }
-
-                    postit.querySelector('.btn-delete-note').addEventListener('click', async (e) => {
-                        if (confirm('¿Seguro que deseas eliminar esta nota?')) {
-                            const id = e.target.getAttribute('data-id');
-                            await deleteDoc(doc(db, "notes", id));
-                        }
-                    });
-
-                    board.appendChild(postit);
-                });
-            });
-        }
-
-        // --- ACCIONES DEL PANEL ---
-
-        // Nota de Texto
-        document.getElementById('tool-text').addEventListener('click', async () => {
-            await addDoc(collection(db, "notes"), {
-                userId: currentUser.uid,
-                type: 'text',
-                content: '',
-                date: new Date().toLocaleDateString('es-ES'),
-                createdAt: new Date().getTime()
-            });
-        });
-
-        // Foto en Base64
-        document.getElementById('tool-photo').addEventListener('click', () => document.getElementById('file-input').click());
-        document.getElementById('file-input').addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                await addDoc(collection(db, "notes"), {
-                    userId: currentUser.uid,
-                    type: 'photo',
-                    content: e.target.result, 
-                    caption: file.name,
-                    date: new Date().toLocaleDateString('es-ES'),
-                    createdAt: new Date().getTime()
-                });
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Canvas de Dibujo
-        document.getElementById('tool-draw').addEventListener('click', () => {
-            const modal = document.createElement('div');
-            modal.style = "position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.95); z-index:1000; display:flex; justify-content:center; align-items:center; flex-direction:column; padding:1rem;";
-            modal.innerHTML = `
-                <div style="background:var(--bg-tarjeta); padding:1.5rem; border-radius:16px; border:1px solid var(--borde); text-align:center; width:100%; max-width:440px;">
-                    <h3 style="margin-bottom:1rem; color:var(--acento-oro)">Dibuja tu idea</h3>
-                    <canvas id="modal-canvas" width="400" height="300" style="background:#090d16; border-radius:8px; border:1px solid var(--borde); width:100%; touch-action:none;"></canvas>
-                    <div style="display:flex; justify-content:space-between; margin-top:1.25rem; gap:1rem;">
-                        <button style="flex:1; padding:0.6rem; background:transparent; border:1px solid var(--borde); color:var(--texto-secundario); border-radius:8px; cursor:pointer;" id="btn-canvas-cancel">Cancelar</button>
-                        <button class="btn-submit" id="btn-canvas-save" style="flex:1; padding:0.6rem;">Guardar Nota</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            const canvas = document.getElementById('modal-canvas');
-            const ctx = canvas.getContext('2d');
-            ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 4;
-            ctx.lineCap = 'round';
-            let drawing = false;
-
-            function startDraw(e) { drawing = true; draw(e); }
-            function endDraw() { drawing = false; ctx.beginPath(); }
-            
-            function draw(e) {
-                if (!drawing) return;
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-
-                ctx.lineTo((clientX - rect.left) * scaleX, (clientY - rect.top) * scaleY);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo((clientX - rect.left) * scaleX, (clientY - rect.top) * scaleY);
-            }
-
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mouseup', endDraw);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); });
-            canvas.addEventListener('touchend', endDraw);
-            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
-
-            document.getElementById('btn-canvas-cancel').onclick = () => modal.remove();
-            
-            document.getElementById('btn-canvas-save').onclick = async () => {
-                const dataURL = canvas.toDataURL();
-                await addDoc(collection(db, "notes"), {
-                    userId: currentUser.uid,
-                    type: 'draw',
-                    content: dataURL, 
-                    caption: 'Dibujo manual',
-                    date: new Date().toLocaleDateString('es-ES'),
-                    createdAt: new Date().getTime()
-                });
-                modal.remove();
-            };
         });
     </script>
+
 </body>
-</html>
+                </html>
+    
