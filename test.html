@@ -25,7 +25,6 @@
 </div>
 
 <script>
-    // Solo existe un "const allQuestions". Si necesitas añadir más preguntas, hazlo aquí dentro.
     const allQuestions = [
         { q: "¿Quién ostenta la máxima representación del Ayuntamiento?", o: ["El Secretario", "El Alcalde", "El Concejal", "El Pleno"], a: 1, e: "El Alcalde" },
         { q: "¿Qué es un deber básico del empleado público?", o: ["Hacer huelga", "Respetar la Constitución", "Pedir vacaciones", "Ninguna"], a: 1, e: "Respetar la Constitución" }
@@ -33,7 +32,6 @@
 
     let index = 0;
     let score = 0;
-    // Seleccionamos 20 preguntas aleatorias o todas si hay menos de 20
     let questions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 20);
 
     function show() {
