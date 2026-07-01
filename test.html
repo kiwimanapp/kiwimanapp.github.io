@@ -2,10 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Oficial</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; display: flex; justify-content: center; }
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 600px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .question { font-size: 1.4rem; font-weight: bold; margin-bottom: 20px; }
         button { display: block; width: 100%; padding: 20px; margin: 10px 0; border: none; border-radius: 8px; background: #2196F3; color: white; cursor: pointer; font-size: 1.1rem; }
         button:disabled { opacity: 0.6; cursor: not-allowed; }
         .correct { background: #4CAF50 !important; }
@@ -17,31 +19,35 @@
 <div class="container">
     <div id="quiz">
         <h2 id="progress">Cargando...</h2>
-        <div id="question" style="font-size: 1.3rem; font-weight: bold; margin-bottom: 20px;"></div>
+        <div id="question" class="question"></div>
         <div id="options"></div>
     </div>
 </div>
 
 <script>
-    // --- AQUÍ ESTÁN TUS PREGUNTAS ---
-    // Solo edita este bloque. No vuelvas a escribir "const allQuestions"
+    // Solo existe un "const allQuestions". Si necesitas añadir más preguntas, hazlo aquí dentro.
     const allQuestions = [
         { q: "¿Quién ostenta la máxima representación del Ayuntamiento?", o: ["El Secretario", "El Alcalde", "El Concejal", "El Pleno"], a: 1, e: "El Alcalde" },
         { q: "¿Qué es un deber básico del empleado público?", o: ["Hacer huelga", "Respetar la Constitución", "Pedir vacaciones", "Ninguna"], a: 1, e: "Respetar la Constitución" }
-        // Para añadir más, solo escribe aquí: , { q: "...", o: [...], a: 0, e: "..." }
     ];
 
-    // --- LÓGICA (No tocar) ---
     let index = 0;
     let score = 0;
+    // Seleccionamos 20 preguntas aleatorias o todas si hay menos de 20
     let questions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 20);
 
     function show() {
+        if(index >= questions.length) {
+            document.getElementById('quiz').innerHTML = `<h2>Test terminado</h2><p>Has acertado ${score} de ${questions.length}</p><button onclick="location.reload()">Repetir</button>`;
+            return;
+        }
+        
         const q = questions[index];
         document.getElementById('progress').innerText = `Pregunta ${index + 1} de ${questions.length}`;
         document.getElementById('question').innerText = q.q;
         const optDiv = document.getElementById('options');
         optDiv.innerHTML = '';
+        
         q.o.forEach((text, i) => {
             const btn = document.createElement('button');
             btn.innerText = text;
@@ -50,11 +56,7 @@
                 if(i === q.a) { btn.classList.add('correct'); score++; }
                 else { btn.classList.add('wrong'); btns[q.a].classList.add('correct'); }
                 btns.forEach(b => b.disabled = true);
-                setTimeout(() => {
-                    index++;
-                    if(index < questions.length) show();
-                    else alert("Test terminado. Puntos: " + score);
-                }, 1000);
+                setTimeout(() => { index++; show(); }, 1500);
             };
             optDiv.appendChild(btn);
         });
