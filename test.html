@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Oficial</title>
+    <title>Examen mama</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 600px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -26,12 +26,53 @@
 
 <script>
     const allQuestions = [
+        // Temas 1-6
         { q: "¿Quién ostenta la máxima representación del Ayuntamiento?", o: ["El Secretario", "El Alcalde", "El Concejal", "El Pleno"], a: 1, e: "El Alcalde" },
-        { q: "¿Qué es un deber básico del empleado público?", o: ["Hacer huelga", "Respetar la Constitución", "Pedir vacaciones", "Ninguna"], a: 1, e: "Respetar la Constitución" }
+        { q: "¿Qué órgano municipal está formado por el Alcalde y los Concejales?", o: ["La Junta de Gobierno", "El Pleno", "La Comisión", "La Secretaría"], a: 1, e: "El Pleno" },
+        { q: "¿Cómo se clasifica el personal al servicio de las Entidades Locales?", o: ["Funcionario y laboral", "Solo funcionario", "Solo laboral", "Directivos"], a: 0, e: "Funcionario y laboral" },
+        { q: "¿Qué es un deber básico del empleado público?", o: ["Hacer huelga", "Respetar la Constitución", "Pedir vacaciones", "Ninguna"], a: 1, e: "Respetar la Constitución" },
+        { q: "¿Las faltas disciplinarias se clasifican en...?", o: ["Leves y graves", "Leves, graves y muy graves", "Solo graves", "No se clasifican"], a: 1, e: "Leves, graves y muy graves" },
+        { q: "¿Cuál es el objetivo de un plan de limpieza?", o: ["Ahorrar dinero", "Optimizar recursos y tiempo", "Gastar más productos", "Ninguna"], a: 1, e: "Optimizar recursos y tiempo" },
+        { q: "¿Qué es la desinfección?", o: ["Limpiar el polvo", "Eliminar microorganismos patógenos", "Abrillantar", "Barrer"], a: 1, e: "Eliminar microorganismos patógenos" },
+        { q: "¿Qué indica un pictograma de calavera en un producto?", o: ["Inflamable", "Tóxico", "Irritante", "Corrosivo"], a: 1, e: "Tóxico" },
+        { q: "¿Qué se debe hacer con los envases de productos químicos?", o: ["Mezclarlos", "Dejarlos abiertos", "Etiquetarlos correctamente", "Tirarlos sin vaciar"], a: 2, e: "Etiquetarlos correctamente" },
+        { q: "¿Qué es un producto tensioactivo?", o: ["Un desinfectante", "Facilita la eliminación de suciedad", "Un ambientador", "Un barniz"], a: 1, e: "Facilita la eliminación de suciedad" },
+        { q: "¿Dónde deben almacenarse los productos de limpieza?", o: ["En el baño", "En un lugar ventilado y fresco", "Cerca de alimentos", "Bajo el sol"], a: 1, e: "En un lugar ventilado y fresco" },
+        { q: "¿Es recomendable mezclar lejía con amoniaco?", o: ["Sí, limpia mejor", "Sí, si se diluye", "No, produce gases tóxicos", "Solo en suelos"], a: 2, e: "No, produce gases tóxicos" },
+        { q: "¿Qué es el pH de un producto?", o: ["Su color", "Su grado de acidez o alcalinidad", "Su precio", "Su tamaño"], a: 1, e: "Su grado de acidez o alcalinidad" },
+        { q: "¿Qué significa que un producto sea corrosivo?", o: ["Que limpia rápido", "Que puede destruir tejidos vivos", "Que es muy barato", "Que huele fuerte"], a: 1, e: "Que puede destruir tejidos vivos" },
+        { q: "¿Qué es un desengrasante?", o: ["Un producto alcalino para grasas", "Un producto ácido para cal", "Un perfume", "Un barniz"], a: 0, e: "Un producto alcalino para grasas" },
+        { q: "¿Qué es la ficha de datos de seguridad?", o: ["El ticket", "Documento con info de peligros del producto", "La factura", "El manual de la fregona"], a: 1, e: "Documento con info de peligros del producto" },
+        { q: "¿Qué se entiende por 'transvase'?", o: ["Limpiar un cristal", "Cambiar un producto de su envase original", "Barrer el suelo", "Fregar"], a: 1, e: "Cambiar un producto de su envase original" },
+        { q: "¿Qué es un detergente neutro?", o: ["pH 7", "pH 14", "pH 0", "Muy ácido"], a: 0, e: "pH 7" },
+        { q: "¿Qué significa 'biodegradable'?", o: ["Que no se acaba", "Que se descompone por acción biológica", "Que brilla mucho", "Que es muy caro"], a: 1, e: "Que se descompone por acción biológica" },
+        { q: "¿Cómo se debe manipular un producto químico?", o: ["Con guantes y protección", "Sin protección", "Comiendo a la vez", "En lugares cerrados"], a: 0, e: "Con guantes y protección" },
+        // Temas 11-14
+        { q: "¿Qué utensilio es el más eficaz para secar cristales?", o: ["Trapo de lana", "Rastrillo de goma (limpiacristales)", "Papel de periódico", "Esponja"], a: 1, e: "El labio de goma garantiza un secado uniforme." },
+        { q: "¿Cómo se deben limpiar los cristales con mucha suciedad?", o: ["Con mucha agua desde el principio", "Retirando primero el polvo y luego fregando", "Con alcohol puro", "No se pueden limpiar"], a: 1, e: "Es vital retirar la suciedad seca para evitar rayar el vidrio." },
+        { q: "¿En qué dirección se limpia un cristal?", o: ["Siempre en círculos", "En zigzag o de arriba hacia abajo", "De izquierda a derecha", "No importa"], a: 1, e: "El zigzag o movimiento vertical permite un control total." },
+        { q: "¿Qué producto no se recomienda en cristales?", o: ["Limpiacristales", "Jabón neutro", "Productos abrasivos", "Vinagre"], a: 2, e: "Los abrasivos rayan permanentemente el cristal." },
+        { q: "¿Qué se debe revisar en una ventana antes de limpiar?", o: ["El estado de los cierres", "El color de la pared", "Si hay cortinas", "La marca de la ventana"], a: 0, e: "La seguridad es lo primero antes de manipular elementos." },
+        { q: "¿Cuál es el mejor mantenimiento para madera barnizada?", o: ["Limpiarla con agua abundante", "Usar ceras o productos específicos para madera", "Lijarla cada día", "Usar lejía"], a: 1, e: "Los productos específicos nutren y protegen el barniz." },
+        { q: "¿Cómo se limpia el cuero natural?", o: ["Con disolvente", "Con un paño humedecido en agua y jabón neutro", "Con grasa de motor", "No se limpia"], a: 1, e: "El jabón neutro es seguro para el cuero; el disolvente lo dañaría." },
+        { q: "¿Qué herramienta es ideal para tapizados textiles?", o: ["Escoba de cerdas duras", "Aspiradora con cepillo tapicero", "Manguera de agua", "Esponja muy mojada"], a: 1, e: "La aspiración controlada evita dañar las fibras." },
+        { q: "¿Qué efecto tienen los productos abrillantadores en exceso?", o: ["Atraen más el polvo", "Protegen mejor", "No hacen nada", "Desinfectan"], a: 0, e: "El exceso de grasa o cera crea una capa pegajosa que atrapa polvo." },
+        { q: "¿Se puede usar vapor en muebles tapizados?", o: ["Sí, siempre", "Solo si el fabricante lo indica", "Nunca", "Solo en cuero"], a: 1, e: "El vapor puede encoger o deformar ciertos tejidos." },
+        { q: "¿Qué es lo primero al limpiar una mesa de despacho?", o: ["Fregar el suelo", "Retirar papeles y objetos", "Limpiar el teléfono", "Limpiar la silla"], a: 1, e: "El orden previo permite una limpieza profunda y segura." },
+        { q: "¿Qué precaución tener con equipos informáticos?", o: ["Usar agua abundante", "No pulverizar líquidos directamente sobre ellos", "Desenchufarlos siempre", "Usar lejía"], a: 1, e: "La humedad puede causar cortocircuitos." },
+        { q: "¿Qué elemento de oficina acumula más gérmenes?", o: ["El teclado y ratón", "El suelo", "La ventana", "La pared"], a: 0, e: "Al ser de contacto frecuente, requieren desinfección constante." },
+        { q: "¿Cómo se limpian las papeleras de oficina?", o: ["Se vacían y desinfectan", "Solo se vacían", "Se dejan como están", "Se limpian con lejía pura"], a: 0, e: "El vaciado y la desinfección evitan olores y plagas." },
+        { q: "¿Qué es la 'limpieza de mantenimiento'?", o: ["La limpieza profunda anual", "Limpieza diaria para mantener higiene", "Limpieza solo de cristales", "Limpieza de fachada"], a: 1, e: "Es la rutina diaria para garantizar condiciones de uso." },
+        { q: "¿Qué son los EPIs?", o: ["Equipos de Protección Individual", "Equipos de Limpieza", "Elementos de Peligro", "Escaleras"], a: 0, e: "Son equipos diseñados para proteger al trabajador." },
+        { q: "¿Cuál es la causa más común de accidentes en limpieza?", o: ["Caídas al mismo nivel", "Cortes con cristal", "Alergias", "Quemaduras"], a: 0, e: "Los resbalones y tropiezos son los más frecuentes." },
+        { q: "¿Qué es la ergonomía en limpieza?", o: ["Usar mucha fuerza", "Adaptar las tareas al cuerpo para evitar lesiones", "Trabajar rápido", "Usar máquinas grandes"], a: 1, e: "La ergonomía busca evitar lesiones musculoesqueléticas." },
+        { q: "¿Cómo levantar un cubo pesado?", o: ["Doblando la espalda", "Doblando las rodillas y manteniendo la espalda recta", "De un tirón", "Con los brazos extendidos"], a: 1, e: "Es la técnica correcta para proteger la columna." },
+        { q: "¿Qué hacer ante un derrame químico?", o: ["Limpiarlo con la mano", "Poner una alfombra", "Seguir el protocolo de actuación y usar EPIs", "Huir"], a: 2, e: "La seguridad frente a agentes químicos es prioritaria." }
     ];
 
     let index = 0;
     let score = 0;
+    // Si quieres que salgan todas, cambia 20 por allQuestions.length
     let questions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 20);
 
     function show() {
