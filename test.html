@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Repaso</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 600px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .question { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
+        button { display: block; width: 100%; padding: 25px; margin: 15px 0; font-size: 1.3rem; border: none; border-radius: 12px; background-color: #2196F3; color: white; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
+        .correct { background-color: #4CAF50 !important; }
+        .wrong { background-color: #F44336 !important; }
+        #feedback { margin-top: 20px; padding: 20px; border-radius: 10px; background: #e0e0e0; display: none; font-size: 1.2rem; }
+        #next-btn { background-color: #333; display: none; }
+        .home-btn { background-color: #777; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="quiz-ui">
+        <h1 id="progress" style="text-align: center; font-size: 1.2rem;">Pregunta 1 de 20</h1>
+        <div id="question" class="question">Cargando...</div>
+        <div id="options"></div>
+        <div id="feedback"></div>
+        <button id="next-btn" onclick="nextQuestion()">Siguiente →</button>
+    </div>
+    
+    <div id="result-ui" style="display:none; text-align: center;">
+        <h1>Resultado Final</h1>
+        <p id="score-text" style="font-size: 2rem;"></p>
+        <button onclick="location.reload()">Repetir Test</button>
+        <button class="home-btn" onclick="window.location.href='index.html'">Volver al Inicio</button>
+    </div>
+</div>
+
+<script>
+    // Tu lista de preguntas (puedes añadir todas las que necesites)
+    const allQuestions = [
+        { q: "¿Cuál es el objetivo principal de planificar las tareas de limpieza?", o: ["Hacer menos trabajo", "Optimizar el tiempo y recursos", "Terminar antes", "No trabajar en equipo"], a: 1, e: "La planificación busca la eficiencia y calidad." },
+        { q: "¿Qué es la calidad en la atención al ciudadano?", o: ["Hacerlo rápido", "Satisfacer al usuario", "Ignorar quejas", "Solo responder"], a: 1, e: "La calidad es satisfacer al usuario." }
+    ];
+
+    let questions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 20);
+    let index = 0;
+    let score = 0;
+
+    function showQuestion() {
+        const q = questions[index];
+        document.getElementById('progress').innerText = `Pregunta ${index + 1} de ${questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+
+        q.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(i);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected) {
+        const q = questions[index];
+        const buttons = document.getElementById('options').children;
+        if (selected === q.a) {
+            buttons[selected].classList.add('correct');
+            score++;
+        } else {
+            buttons[selected].classList.add('wrong');
+            buttons[q.a].classList.add('correct');
+        }
+        for(let btn of buttons) btn.disabled = true;
+        const feedback = document.getElementById('feedback');
+        feedback.style.display = 'block';
+        feedback.innerHTML = `<strong>Explicación:</strong> ${q.e}`;
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        index++;
+        if (index < questions.length) showQuestion();
+        else showResults();
+    }
+
+    function showResults() {
+        document.getElementById('quiz-ui').style.display = 'none';
+        document.getElementById('result-ui').style.display = 'block';
+        document.getElementById('score-text').innerText = `Has acertado ${score} de ${questions.length}`;
+    }
+
+    showQuestion();
+</script>
+</body>
+</html>
