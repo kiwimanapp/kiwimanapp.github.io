@@ -1,562 +1,213 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daniel Pozo | SysAdmin & Dev</title>
+    <title>The Kiwi Store | Stands, Pegatinas y Productos NFC para Reseñas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-principal: #0f1319;
-            --bg-tarjeta: #181f2a;
-            --bg-cabecera: #131922;
-            --texto-principal: #f1f5f9;
-            --texto-secundario: #94a3b8;
-            --acento-oro: #d4af37;
-            --acento-azul: #38bdf8;
-            --borde: #242f41;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
         body {
-            background-color: var(--bg-principal);
-            color: var(--texto-principal);
-            line-height: 1.6;
+            font-family: 'Plus Jakarta+ Sans', sans-serif;
         }
-
-        /* CABECERA (NAVBAR) */
-        header {
-            background-color: var(--bg-cabecera);
-            border-bottom: 1px solid var(--borde);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        .gradient-brand {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
         }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.2rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        /* Insignia K Dorada en la cabecera */
-        .brand-badge {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #fee180, #a87914);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #111;
-            font-weight: 800;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
-        }
-
-        .brand span {
-            color: var(--texto-secundario);
-            font-weight: 400;
-            font-size: 1rem;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-        }
-
-        nav a {
-            color: var(--texto-secundario);
-            text-decoration: none;
-            margin-left: 1.8rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--texto-principal);
-        }
-
-        /* Botón de candado especial */
-        nav a#btn-login-toggle {
-            color: var(--acento-oro);
-            cursor: pointer;
-        }
-
-        nav a#btn-login-toggle:hover {
-            color: #fee180;
-        }
-
-        /* SECCIÓN HERO */
-        .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 5rem 2rem 3rem 2rem;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3.2rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.5px;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: var(--texto-secundario);
-            max-width: 700px;
-            margin: 0 auto;
-            font-weight: 400;
-        }
-
-        /* SECCIÓN SOBRE MÍ INTEGRADA CON EL LOGO */
-        .contenedor-sobremi {
-            max-width: 1100px;
-            margin: 2rem auto 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .tarjeta-sobremi {
-            background-color: var(--bg-tarjeta);
-            border: 1px solid var(--borde);
-            border-radius: 16px;
-            padding: 3rem;
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 3rem;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .texto-sobremi h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .texto-sobremi p {
-            color: var(--texto-secundario);
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
-        }
-
-        /* Contenedor del Logo (Efecto anillo de luz difuminado) */
-        .avatar-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .avatar-wrapper::before {
-            content: '';
-            position: absolute;
-            width: 240px;
-            height: 240px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(214,175,55,0.15) 0%, rgba(0,0,0,0) 70%);
-            border: 1px solid rgba(214, 175, 55, 0.2);
-            z-index: 1;
-        }
-
-        .logo-kiwi {
-            width: 220px;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 50%;
-            z-index: 2;
-            position: relative;
-        }
-
-        /* SECCIÓN PROYECTOS */
-        .seccion {
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 2rem;
-        }
-
-        .seccion-titulo {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .grid-proyectos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .tarjeta-proyecto {
-            background-color: var(--bg-tarjeta);
-            border: 1px solid var(--borde);
-            padding: 2.5rem 2rem;
-            border-radius: 12px;
-            transition: transform 0.3s, border-color 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .tarjeta-proyecto:hover {
-            transform: translateY(-4px);
-            border-color: #334155;
-        }
-
-        .proyecto-icono {
-            font-size: 1.8rem;
-            margin-bottom: 1.2rem;
-            color: var(--acento-azul);
-        }
-
-        .tarjeta-proyecto h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-        }
-
-        .tarjeta-proyecto p {
-            color: var(--texto-secundario);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tag {
-            background-color: #1e293b;
-            color: #cbd5e1;
-            padding: 0.3rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            border: 1px solid #2e3e56;
-        }
-
-        /* VENTANA FLOTANTE DE ACCESO (MODAL) */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(15, 19, 25, 0.85);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-card {
-            background-color: var(--bg-tarjeta);
-            border: 1px solid var(--borde);
-            padding: 2.25rem 2rem;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 1.25rem;
-            color: var(--texto-principal);
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .input-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--texto-secundario);
-            margin-bottom: 0.5rem;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--bg-principal);
-            border: 1px solid var(--borde);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: var(--acento-azul);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.75rem;
-        }
-
-        .btn-submit {
-            flex: 1;
-            padding: 0.75rem;
-            background-color: var(--acento-azul);
-            color: var(--bg-principal);
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: background-color 0.2s;
-        }
-
-        .btn-submit:hover {
-            background-color: #0284c7;
-        }
-
-        .btn-cancel {
-            flex: 1;
-            padding: 0.75rem;
-            background: transparent;
-            border: 1px solid var(--borde);
-            color: var(--texto-secundario);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: color 0.2s, border-color 0.2s;
-        }
-
-        .btn-cancel:hover {
-            color: var(--texto-principal);
-            border-color: var(--texto-secundario);
-        }
-
-        /* PIE DE PÁGINA */
-        footer {
-            border-top: 1px solid var(--borde);
-            background-color: var(--bg-cabecera);
-            text-align: center;
-            padding: 2.5rem;
-            margin-top: 6rem;
-            color: var(--texto-secundario);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--texto-principal);
-            text-decoration: none;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .tarjeta-sobremi {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 2.5rem;
-                padding: 2rem;
-            }
-            .avatar-wrapper {
-                grid-row: 1;
-            }
-            .hero h1 { font-size: 2.4rem; }
-            .hero p { font-size: 1.1rem; }
-        }
-
-        @media (max-width: 600px) {
-            .nav-container { flex-direction: column; gap: 1rem; }
-            nav a { margin: 0 0.75rem; }
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 antialiased">
 
-    <!-- NAVEGACIÓN -->
-    <header>
-        <div class="nav-container">
-            <div class="brand">
-                <div class="brand-badge">K</div>
-                Daniel Pozo <span>• SysAdmin & Dev</span>
+    <!-- Top Notification Bar -->
+    <div class="bg-indigo-900 text-indigo-100 text-xs sm:text-sm py-2 px-4 text-center font-medium">
+        🚀 ¡Impulsa las valoraciones de tu negocio con tecnología NFC y QR! Envío rápido a toda España.
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center text-white font-extrabold text-xl shadow-md">K</div>
+                <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">The Kiwi <span class="gradient-text">Store</span></span>
             </div>
-            <nav>
-                <a href="#inicio">Inicio</a>
-                <a href="#sobre-mi">Sobre mí</a>
-                <a href="#proyectos">Proyectos</a>
-                <a href="#contacto">Contacto</a>
-                <!-- Icono de candado cerrado añadido -->
-                <a id="btn-login-toggle">🔒 Iniciar sesión</a>
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
+                <a href="#productos" class="hover:text-indigo-600 transition">Productos</a>
+                <a href="#beneficios" class="hover:text-indigo-600 transition">¿Cómo funciona?</a>
+                <a href="#contacto" class="hover:text-indigo-600 transition">Contacto</a>
             </nav>
+            <div>
+                <a href="#productos" class="gradient-brand text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:opacity-95 transition text-sm">Ver Catálogo</a>
+            </div>
         </div>
     </header>
 
-    <main id="inicio">
-        <!-- HERO TITULO -->
-        <section class="hero">
-            <h1>Daniel Pozo</h1>
-            <p>Construyendo Infraestructuras Digitales Seguras y Eficientes</p>
-        </section>
-
-        <!-- SOBRE MÍ CON INTEGRACIÓN DE LOGO -->
-        <section id="sobre-mi" class="contenedor-sobremi">
-            <div class="tarjeta-sobremi">
-                <div class="texto-sobremi">
-                    <h2>Sobre Mí</h2>
-                    <p>Técnico en Sistemas Microinformáticos y Redes con una profunda vocación por el desarrollo de software estructurado y la automatización inteligente de sistemas.</p>
-                    <p>Me especializo en el despliegue de soluciones de infraestructura sólidas, la resolución de contingencias críticas en redes y el desarrollo de aplicaciones nativas enfocadas a optimizar flujos de trabajo cotidianos.</p>
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-indigo-50/50 via-white to-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 mb-6 uppercase tracking-wider">
+                    ✨ Soluciones NFC & QR para Negocios
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
+                    Consigue más reseñas de 5 estrellas <span class="gradient-text">con un solo toque</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed">
+                    Transforma la satisfacción de tus clientes en opiniones reales en Google, Instagram y TripAdvisor. Stands, pegatinas y posavasos inteligentes listos para conectar.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#productos" class="w-full sm:w-auto gradient-brand text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition">
+                        Ver Catálogo de Productos
+                    </a>
+                    <a href="https://wa.me/34614755485?text=¡Hola!%20Me%20gustaría%20hacer%20un%20pedido%20personalizado%20para%20mi%20negocio." target="_blank" class="w-full sm:w-auto bg-white border border-slate-200 text-slate-800 font-bold px-8 py-4 rounded-xl shadow-sm hover:bg-slate-50 transition">
+                        📲 Pedido Personalizado
+                    </a>
                 </div>
-
-                <!-- El logo del Kiwi con su ruta corregida -->
-                <div class="avatar-wrapper">
-                    <img src="logo.png" class="logo-kiwi">
-                </div>
-            </div>
-        </section>
-
-        <!-- PROYECTOS -->
-        <section id="proyectos" class="seccion">
-            <h2 class="seccion-titulo">Proyectos</h2>
-            <div class="grid-proyectos">
-
-                <!-- Tarjeta 1: Skills -->
-                <div class="tarjeta-proyecto">
-                    <div>
-                        <div class="proyecto-icono">⚙️</div>
-                        <h3>Sistemas y Redes</h3>
-                        <p>Gestión de infraestructura IT, administración avanzada de entornos operativos, monitorización de redes locales y auditorías de seguridad perimetral.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Sistemas</span>
-                        <span class="tag">Redes</span>
-                        <span class="tag">Soporte</span>
-                    </div>
-                </div>
-
-                <!-- Tarjeta 2: Terminal -->
-                <div class="tarjeta-proyecto">
-                    <div>
-                        <div class="proyecto-icono">💻</div>
-                        <h3>Automatización & Scripts</h3>
-                        <p>Diseño y ejecución de scripts personalizados para la optimización de tareas repetitivas, bots de control de flujo y extracción automatizada de datos.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Playwright</span>
-                        <span class="tag">Scripting</span>
-                    </div>
-                </div>
-
-                <!-- Tarjeta 3: Plantaskiwi -->
-                <div class="tarjeta-proyecto">
-                    <div>
-                        <div class="proyecto-icono">🌱</div>
-                        <h3>Plantaskiwi</h3>
-                        <p>Aplicación nativa diseñada para plataformas móviles orientada a medir los rangos de intensidad lumínica ambiental para optimizar el ecosistema vegetal doméstico.</p>
-                    </div>
-                    <div class="tags">
-                        <span class="tag">Android</span>
-                        <span class="tag">Kotlin</span>
-                        <span class="tag">XML</span>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-    </main>
-
-    <!-- VENTANA MODAL DE INICIO DE SESIÓN -->
-    <div class="modal-overlay" id="modal-login">
-        <div class="modal-card">
-            <h3>🔒 Acceso de Administrador</h3>
-            <div class="input-group">
-                <label for="login-email">Usuario o Correo</label>
-                <input type="email" id="login-email" placeholder="tu-correo@gmail.com">
-            </div>
-            <div class="input-group">
-                <label for="login-password">Contraseña</label>
-                <input type="password" id="login-password" placeholder="••••••••">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-cancel" id="btn-login-cancel">Cancelar</button>
-                <button class="btn-submit" id="btn-login-submit">Entrar</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- PIE DE PÁGINA / CONTACTO -->
-    <footer id="contacto">
-        <p>© 2026 Daniel Pozo.</p>
-        <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--texto-secundario);">
-            Contacto: <a href="mailto: kiwimanapp@gmail.com">kiwimanapp@gmail.com</a>
-        </p>
+    <!-- Products Section -->
+    <main id="productos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Nuestros Productos Estrella</h2>
+            <p class="text-slate-600 text-lg">Diseñados a medida para restaurantes, tiendas, hoteles y profesionales.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Producto 1: Stand de Mostrador -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent z-10"></div>
+                    <span class="absolute top-4 left-4 z-20 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Más Vendido</span>
+                    <!-- Placeholder de imagen representativa -->
+                    <img src="https://images.unsplash.com/photo-1556742049-0a67d553c24a?auto=format&fit=crop&w=800&q=80" alt="Stand de Mostrador NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Stand de Mostrador NFC & QR</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Expositor acrílico de alta gama para caja o recepción. Permite a tus clientes dejar reseñas instantáneas acercando su móvil o escaneando el código QR.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">29.99 €</span>
+                            <span class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-md">Envío Gratis</span>
+                        </div>
+                        <button onclick="pedirProducto('Stand de Mostrador NFC')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2: Pegatinas Inteligentes -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <span class="absolute top-4 left-4 z-20 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Pack x5 / x10</span>
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Pegatinas NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Pegatinas Vinilo NFC & QR</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Ideales para mesas de restaurantes, puertas, espejos de baños o mostradores. Resistentes al agua y diseñadas con la imagen de tu marca.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">19.99 €</span>
+                            <span class="text-xs text-slate-500 font-medium">Pack de 5 unidades</span>
+                        </div>
+                        <button onclick="pedirProducto('Pack de Pegatinas NFC')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3: Posavasos Interactivos -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <span class="absolute top-4 left-4 z-20 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Hostelería</span>
+                    <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=800&q=80" alt="Posavasos NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Posavasos NFC Personalizados</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Sorprende a tus clientes en las mesas de tu cafetería, bar o restaurante mientras disfrutan de su consumición. Alta durabilidad y diseño único.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">34.99 €</span>
+                            <span class="text-xs text-slate-500 font-medium">Pack de 10 unidades</span>
+                        </div>
+                        <button onclick="pedirProducto('Posavasos NFC (Pack 10)')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Beneficios Section -->
+    <section id="beneficios" class="bg-slate-900 text-white py-20 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">¿Por qué elegir The Kiwi Store?</h2>
+                <p class="text-slate-400 text-lg">Tecnología punta integrada con la identidad visual de tu negocio.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">⚡</div>
+                    <h3 class="text-xl font-bold mb-3">Sin aplicaciones</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Tus clientes no necesitan descargar ninguna app. Solo acercan su iPhone o Android y se abre directamente tu enlace de reseñas.</p>
+                </div>
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">🎨</div>
+                    <h3 class="text-xl font-bold mb-3">Diseño 100% Personalizado</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Adaptamos el diseño con tu logotipo corporativo, los colores de tu marca y tus códigos QR oficiales listos para usar.</p>
+                </div>
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-pink-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">📈</div>
+                    <h3 class="text-xl font-bold mb-3">Más Visibilidad Online</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Mejora tu posicionamiento en Google Maps y atrae nuevos clientes gracias al flujo constante de opiniones positivas de 5 estrellas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-white border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-6 md:mb-0">
+                <span class="text-2xl font-extrabold text-slate-900 tracking-tight">The Kiwi <span class="gradient-text">Store</span></span>
+                <p class="text-slate-500 text-sm mt-1">Soluciones inteligentes NFC & QR para potenciar tu negocio.</p>
+            </div>
+            <div class="text-sm text-slate-500">
+                <p>&copy; 2026 The Kiwi Store. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- SCRIPT DE CONTROL PARA EL LOGUIADO -->
+    <!-- Script de WhatsApp con tu número configurado -->
     <script>
-        const modalLogin = document.getElementById('modal-login');
-        const btnToggle = document.getElementById('btn-login-toggle');
-        const btnCancel = document.getElementById('btn-login-cancel');
-        const btnSubmit = document.getElementById('btn-login-submit');
-
-        // Mostrar la ventana flotante
-        btnToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            modalLogin.style.display = 'flex';
-        });
-
-        // Ocultar la ventana al pulsar Cancelar
-        btnCancel.addEventListener('click', () => {
-            modalLogin.style.display = 'none';
-        });
-
-        // Ocultar la ventana si se pulsa fuera de la tarjeta de login
-        modalLogin.addEventListener('click', (e) => {
-            if (e.target === modalLogin) {
-                modalLogin.style.display = 'none';
-            }
-        });
-
-        // Lógica del botón Entrar
-        btnSubmit.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
-            
-            if(email && pass) {
-                // Aquí puedes integrar tu Firebase o backend cuando lo requieras
-                console.log("Intento de login con:", email);
-                modalLogin.style.display = 'none';
-            } else {
-                alert('Por favor, rellena todos los campos.');
-            }
-        });
+        function pedirProducto(producto) {
+            const numeroWhatsApp = "34614755485"; // Tu número configurado
+            const mensaje = encodeURIComponent(`¡Hola! Me interesa comprar el siguiente producto: *${producto}*. ¿Me podéis dar más información sobre la personalización?`);
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
+        }
     </script>
-
 </body>
-                </html>
-    
+</html>
