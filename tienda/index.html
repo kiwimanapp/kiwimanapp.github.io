@@ -1,11 +1,213 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <title>Tienda Kiwiman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Kiwi Store | Stands, Pegatinas y Productos NFC para Reseñas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta+ Sans', sans-serif;
+        }
+        .gradient-brand {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body>
-    <h1>Bienvenido a la Tienda de Kiwiman</h1>
-    <p>Esta es mi nueva tienda gestionada desde GitHub.</p>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Top Notification Bar -->
+    <div class="bg-indigo-900 text-indigo-100 text-xs sm:text-sm py-2 px-4 text-center font-medium">
+        🚀 ¡Impulsa las valoraciones de tu negocio con tecnología NFC y QR! Envío rápido a toda España.
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center text-white font-extrabold text-xl shadow-md">K</div>
+                <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">The Kiwi <span class="gradient-text">Store</span></span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
+                <a href="#productos" class="hover:text-indigo-600 transition">Productos</a>
+                <a href="#beneficios" class="hover:text-indigo-600 transition">¿Cómo funciona?</a>
+                <a href="#contacto" class="hover:text-indigo-600 transition">Contacto</a>
+            </nav>
+            <div>
+                <a href="#productos" class="gradient-brand text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:opacity-95 transition text-sm">Ver Catálogo</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-indigo-50/50 via-white to-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 mb-6 uppercase tracking-wider">
+                    ✨ Soluciones NFC & QR para Negocios
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
+                    Consigue más reseñas de 5 estrellas <span class="gradient-text">con un solo toque</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed">
+                    Transforma la satisfacción de tus clientes en opiniones reales en Google, Instagram y TripAdvisor. Stands, pegatinas y posavasos inteligentes listos para conectar.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#productos" class="w-full sm:w-auto gradient-brand text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition">
+                        Ver Catálogo de Productos
+                    </a>
+                    <a href="https://wa.me/34614755485?text=¡Hola!%20Me%20gustaría%20hacer%20un%20pedido%20personalizado%20para%20mi%20negocio." target="_blank" class="w-full sm:w-auto bg-white border border-slate-200 text-slate-800 font-bold px-8 py-4 rounded-xl shadow-sm hover:bg-slate-50 transition">
+                        📲 Pedido Personalizado
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <main id="productos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Nuestros Productos Estrella</h2>
+            <p class="text-slate-600 text-lg">Diseñados a medida para restaurantes, tiendas, hoteles y profesionales.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Producto 1: Stand de Mostrador -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent z-10"></div>
+                    <span class="absolute top-4 left-4 z-20 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Más Vendido</span>
+                    <!-- Placeholder de imagen representativa -->
+                    <img src="STAND.PNG" alt="Stand de Mostrador NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Stand de Mostrador NFC & QR</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Expositor acrílico de alta gama para caja o recepción. Permite a tus clientes dejar reseñas instantáneas acercando su móvil o escaneando el código QR.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">29.99 €</span>
+                            <span class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-md">Envío Gratis</span>
+                        </div>
+                        <button onclick="pedirProducto('Stand de Mostrador NFC')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2: Pegatinas Inteligentes -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <span class="absolute top-4 left-4 z-20 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Pack x5 / x10</span>
+                    <img src="PEGATINAS.PNG" alt="Pegatinas NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Pegatinas Vinilo NFC & QR</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Ideales para mesas de restaurantes, puertas, espejos de baños o mostradores. Resistentes al agua y diseñadas con la imagen de tu marca.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">19.99 €</span>
+                            <span class="text-xs text-slate-500 font-medium">Pack de 5 unidades</span>
+                        </div>
+                        <button onclick="pedirProducto('Pack de Pegatinas NFC')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3: Posavasos Interactivos -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <span class="absolute top-4 left-4 z-20 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Hostelería</span>
+                    <img src="POSAVASOS.PNG" alt="Posavasos NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Posavasos NFC Personalizados</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Sorprende a tus clientes en las mesas de tu cafetería, bar o restaurante mientras disfrutan de su consumición. Alta durabilidad y diseño único.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">34.99 €</span>
+                            <span class="text-xs text-slate-500 font-medium">Pack de 10 unidades</span>
+                        </div>
+                        <button onclick="pedirProducto('Posavasos NFC (Pack 10)')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Beneficios Section -->
+    <section id="beneficios" class="bg-slate-900 text-white py-20 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">¿Por qué elegir The Kiwi Store?</h2>
+                <p class="text-slate-400 text-lg">Tecnología punta integrada con la identidad visual de tu negocio.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">⚡</div>
+                    <h3 class="text-xl font-bold mb-3">Sin aplicaciones</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Tus clientes no necesitan descargar ninguna app. Solo acercan su iPhone o Android y se abre directamente tu enlace de reseñas.</p>
+                </div>
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">🎨</div>
+                    <h3 class="text-xl font-bold mb-3">Diseño 100% Personalizado</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Adaptamos el diseño con tu logotipo corporativo, los colores de tu marca y tus códigos QR oficiales listos para usar.</p>
+                </div>
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-pink-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">📈</div>
+                    <h3 class="text-xl font-bold mb-3">Más Visibilidad Online</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Mejora tu posicionamiento en Google Maps y atrae nuevos clientes gracias al flujo constante de opiniones positivas de 5 estrellas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-white border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-6 md:mb-0">
+                <span class="text-2xl font-extrabold text-slate-900 tracking-tight">The Kiwi <span class="gradient-text">Store</span></span>
+                <p class="text-slate-500 text-sm mt-1">Soluciones inteligentes NFC & QR para potenciar tu negocio.</p>
+            </div>
+            <div class="text-sm text-slate-500">
+                <p>&copy; 2026 The Kiwi Store. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script de WhatsApp con tu número configurado -->
+    <script>
+        function pedirProducto(producto) {
+            const numeroWhatsApp = "34614755485"; // Tu número configurado
+            const mensaje = encodeURIComponent(`¡Hola! Me interesa comprar el siguiente producto: *${producto}*. ¿Me podéis dar más información sobre la personalización?`);
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
+        }
+    </script>
 </body>
 </html>
