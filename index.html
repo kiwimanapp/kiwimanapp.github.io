@@ -33,8 +33,243 @@
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center text-white font-extrabold text-xl shadow-md">K</div>
-                <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">The Kiwi <span class="gradient-text">Store</span></span>
+                <!-- Logotipo integrado con logo.png -->
+                <img src="logo.png" alt="Logo The Kiwi Store" class="h-10 sm:h-12 w-auto object-contain">
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
+                <a href="#productos" class="hover:text-indigo-600 transition">NFC & Reseñas</a>
+                <a href="#paginas-web" class="hover:text-indigo-600 transition">Páginas Web</a>
+                <a href="#beneficios" class="hover:text-indigo-600 transition">¿Cómo funciona?</a>
+                <a href="#contacto" class="hover:text-indigo-600 transition">Contacto</a>
+            </nav>
+            <div>
+                <a href="#productos" class="gradient-brand text-white font-semibold px-5 py-2.5 rounded-full shadow-md hover:opacity-95 transition text-sm">Ver Catálogo</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-b from-indigo-50/50 via-white to-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800 mb-6 uppercase tracking-wider">
+                    ✨ Soluciones NFC, QR y Web para Negocios
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
+                    Consigue más reseñas de 5 estrellas <span class="gradient-text">con un solo toque</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed">
+                    Transforma la satisfacción de tus clientes en opiniones reales en Google, Instagram y TripAdvisor. Stands, pegatinas y posavasos inteligentes listos para conectar — y una web sencilla para que te encuentren online.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#productos" class="w-full sm:w-auto gradient-brand text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition">
+                        Ver Catálogo de Productos
+                    </a>
+                    <a href="https://wa.me/34614755485?text=¡Hola!%20Me%20gustaría%20hacer%20un%20pedido%20personalizado%20para%20mi%20negocio." target="_blank" class="w-full sm:w-auto bg-white border border-slate-200 text-slate-800 font-bold px-8 py-4 rounded-xl shadow-sm hover:bg-slate-50 transition">
+                        📲 Pedido Personalizado
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <main id="productos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Nuestros Productos Estrella</h2>
+            <p class="text-slate-600 text-lg">Diseñados a medida para restaurantes, tiendas, hoteles y profesionales.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Producto 1: Stand de Mostrador -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent z-10"></div>
+                    <span class="absolute top-4 left-4 z-20 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Más Vendido</span>
+                    <img src="STAND.PNG.jpg" alt="Stand de Mostrador NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Stand de Mostrador NFC & QR</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Expositor acrílico de alta gama para caja o recepción. Permite a tus clientes dejar reseñas instantáneas acercando su móvil o escaneando el código QR.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">15 €</span>
+                            <span class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-md">Envío Gratis</span>
+                        </div>
+                        <button onclick="pedirProducto('Stand de Mostrador NFC')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2: Pegatinas Inteligentes -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <span class="absolute top-4 left-4 z-20 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Pack x5</span>
+                    <img src="PEGATINAS.PNG.jpg" alt="Pegatinas NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Pegatinas Vinilo NFC & QR</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Ideales para mesas de restaurantes, puertas, espejos de baños o mostradores. Resistentes al agua y diseñadas con la imagen de tu marca.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">5 €</span>
+                            <span class="text-xs text-slate-500 font-medium">Pack de 5 unidades</span>
+                        </div>
+                        <button onclick="pedirProducto('Pack de Pegatinas NFC')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Pedir por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3: Posavasos Interactivos -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
+                <div class="relative h-64 bg-slate-100 overflow-hidden">
+                    <span class="absolute top-4 left-4 z-20 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Hostelería</span>
+                    <img src="POSAVASOS.PNG.jpg" alt="Posavasos NFC" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </div>
+                <div class="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Posavasos NFC Personalizados</h3>
+                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                            Sorprende a tus clientes en las mesas de tu cafetería, bar o restaurante mientras disfrutan de su consumición. Alta durabilidad y diseño único.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-extrabold text-slate-900">15 €</span>
+                            <span class="text-xs text-slate-500 font-medium">Pack de 10 unidades</span>
+                        </div>
+                        <a href="https://thekiwistore.com/products/posavasos?utm_campaign=share_orders&utm_content=android&utm_medium=product-links" target="_blank" class="w-full block text-center bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                            Comprar ahora
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Cross-sell banner hacia Páginas Web -->
+        <div class="mt-12 rounded-2xl gradient-brand p-8 sm:p-10 text-center text-white shadow-lg">
+            <p class="text-lg sm:text-xl font-bold mb-2">¿Todavía no tienes página web?</p>
+            <p class="text-indigo-100 mb-6">Te la creamos desde 199€, con dominio y hosting incluidos el primer año.</p>
+            <a href="#paginas-web" class="inline-block bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl shadow-md hover:bg-slate-50 transition">Ver paquetes de Páginas Web</a>
+        </div>
+    </main>
+
+    <!-- Páginas Web Section -->
+    <section id="paginas-web" class="bg-slate-50 border-t border-slate-100 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 mb-4 uppercase tracking-wider">
+                    Nuevo servicio
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Tu negocio también necesita estar online</h2>
+                <p class="text-slate-600 text-lg">Una web sencilla, rápida y sin complicaciones — lista en pocos días, sin cuotas de agencia ni letra pequeña.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+
+                <!-- Web Básica -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 p-8 flex flex-col">
+                    <span class="inline-block bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 w-fit">Web Básica</span>
+                    <div class="text-3xl font-extrabold text-slate-900 mb-1">199 €</div>
+                    <p class="text-slate-500 text-sm mb-6">Ideal para bares, peluquerías, tiendas y profesionales que necesitan presencia online ya.</p>
+                    <ul class="space-y-3 text-sm text-slate-700 mb-8 flex-1">
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> 1 página con toda la info de tu negocio</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> Dominio y hosting incluidos el primer año</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> Horarios, ubicación y mapa</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> Botón directo de WhatsApp o llamada</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> Fotos de tu negocio</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> Adaptada a móvil</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-600 font-bold">✓</span> Entrega en 3-5 días</li>
+                    </ul>
+                    <p class="text-xs text-slate-400 mb-6">A partir del 2º año: renovación de dominio por 25€/año (hosting siempre gratis)</p>
+                    <button onclick="pedirProducto('Web Básica (199€)')" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md">
+                        Pedir por WhatsApp
+                    </button>
+                </div>
+
+                <!-- Web Completa -->
+                <div class="bg-white rounded-2xl border-2 border-indigo-200 shadow-md hover:shadow-xl transition-all duration-300 p-8 flex flex-col relative">
+                    <span class="absolute -top-3 right-6 gradient-brand text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Recomendada</span>
+                    <span class="inline-block bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 w-fit">Web Completa</span>
+                    <div class="text-3xl font-extrabold text-slate-900 mb-1">399 €</div>
+                    <p class="text-slate-500 text-sm mb-6">Para negocios que quieren varias secciones y más presencia.</p>
+                    <ul class="space-y-3 text-sm text-slate-700 mb-8 flex-1">
+                        <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> Todo lo de la Web Básica</li>
+                        <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> Hasta 3 páginas (Inicio, Servicios/Productos, Contacto)</li>
+                        <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> Formulario de contacto funcional</li>
+                        <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> Apartado "Sobre nosotros"</li>
+                        <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> Configuración básica de SEO</li>
+                        <li class="flex items-start gap-2"><span class="text-indigo-600 font-bold">✓</span> Entrega en 5-7 días</li>
+                    </ul>
+                    <p class="text-xs text-slate-400 mb-6">A partir del 2º año: renovación de dominio por 25€/año (hosting siempre gratis)</p>
+                    <button onclick="pedirProducto('Web Completa (399€)')" class="w-full gradient-brand text-white font-bold py-3 px-4 rounded-xl transition duration-200 text-sm shadow-md hover:opacity-95">
+                        Pedir por WhatsApp
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Mantenimiento -->
+            <div class="max-w-4xl mx-auto mt-8 bg-white rounded-2xl border border-dashed border-slate-300 p-6 text-center">
+                <p class="text-slate-800 font-bold mb-1">➕ Mantenimiento mensual — 20€/mes <span class="font-normal text-slate-400">(opcional)</span></p>
+                <p class="text-slate-500 text-sm">Cambios de horario, fotos, textos o novedades cuando los necesites, sin tener que tocar nada tú mismo. No incluye la renovación de dominio, que se factura aparte cada año.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beneficios Section -->
+    <section id="beneficios" class="bg-slate-900 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">¿Por qué elegir The Kiwi Store?</h2>
+                <p class="text-slate-400 text-lg">Tecnología punta integrada con la identidad visual de tu negocio.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">⚡</div>
+                    <h3 class="text-xl font-bold mb-3">Sin aplicaciones</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Tus clientes no necesitan descargar ninguna app. Solo acercan su iPhone o Android y se abre directamente tu enlace de reseñas.</p>
+                </div>
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-purple-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">🎨</div>
+                    <h3 class="text-xl font-bold mb-3">Diseño 100% Personalizado</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Adaptamos el diseño con tu logotipo corporativo, los colores de tu marca y tus códigos QR oficiales listos para usar.</p>
+                </div>
+                <div class="bg-slate-800/60 p-8 rounded-2xl border border-slate-700/50">
+                    <div class="w-12 h-12 rounded-xl bg-pink-600 flex items-center justify-center text-xl font-bold mb-6 shadow-inner">📈</div>
+                    <h3 class="text-xl font-bold mb-3">Más Visibilidad Online</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Mejora tu posicionamiento en Google Maps y atrae nuevos clientes gracias al flujo constante de opiniones positivas de 5 estrellas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-white border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-6 md:mb-0 flex items-center space-x-3 justify-center md:justify-start">
+                <img src="logo.png" alt="Logo The Kiwi Store" class="h-8 w-auto object-contain">
+                <p class="text-slate-500 text-sm">Soluciones inteligentes NFC, QR y páginas web para potenciar tu negocio.</p>
+            </div>
+            <div class="text-slate-400 text-sm">
+                &copy; 2026 The Kiwi Store. Todos los derechos reservados.
+            </div>
+        </div>
+                   <span class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">The Kiwi <span class="gradient-text">Store</span></span>
             </div>
             <nav class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
                 <a href="#productos" class="hover:text-indigo-600 transition">NFC & Reseñas</a>
