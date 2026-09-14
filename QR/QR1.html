@@ -1,1 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Redirección automática inmediata (fallback si JS está desactivado) -->
+    <meta http-equiv="refresh" content="0;url=https://www.google.com">
+    
+    <!-- Evitar que los buscadores indexen este enlace intermedio -->
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>Redirigiendo...</title>
+    
+    <script>
+        // CAMBIA ESTA URL POR LA WEB A LA QUE QUIERES REDIRIGIR
+        const URL_DESTINO = "https://www.google.com";
+
+        // Redirección rápida por JavaScript
+        window.location.replace(URL_DESTINO);
+    </script>
+    
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9fafb;
+            color: #374151;
+            text-align: center;
+        }
+        .container {
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p>Redirigiendo a tu destino...</p>
+        <p>Si no te redirige automáticamente, <a id="redirect-link" href="https://www.google.com">haz clic aquí</a>.</p>
+    </div>
+
+    <script>
+        // Actualizar el enlace manual por si falla la redirección automática
+        document.getElementById("redirect-link").href = URL_DESTINO;
+    </script>
+</body>
+</html>
 
