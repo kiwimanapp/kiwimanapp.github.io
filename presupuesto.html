@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Presupuestos por voz · Kiwiman Digital Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3B;--blue:#2D8CFF;--teal:#00C6A7;--grey:#E8F1F5;--bg:#fff;--tx:#0B1F3B;--card:#E8F1F5;--mute:#4a5d75;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#07142a;--tx:#E8F1F5;--card:#12294a;--mute:#9db3cc}}
+*{box-sizing:border-box}html{height:100%}
+body{margin:0;font-family:Montserrat,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100%}
+main{max-width:560px;margin:0 auto;padding:16px 16px 80px}
+h1,h2{margin:0 0 12px;font-weight:700}h1{font-size:26px}h2{font-size:19px}
+p{line-height:1.5}.mute{color:var(--mute);font-weight:300;font-size:14px}
+header.top{background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+header.top b{font-size:16px}header.top button{background:none;border:0;color:#fff;font:inherit;font-weight:300;min-height:44px;cursor:pointer}
+.card{background:var(--card);border-radius:14px;padding:14px;margin:0 0 12px}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 4px}
+input,textarea,select{width:100%;font:inherit;font-size:16px;padding:12px;border-radius:10px;border:2px solid transparent;background:var(--bg);color:var(--tx);min-height:48px}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
+.btn{display:block;width:100%;min-height:56px;border:0;border-radius:14px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;background:var(--blue);color:#fff;margin:8px 0;padding:12px}
+.btn.alt{background:var(--card);color:var(--tx)}.btn.ok{background:var(--teal);color:var(--navy)}.btn.sm{min-height:48px;font-size:15px}
+.rec{width:200px;height:200px;border-radius:50%;margin:12px auto;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:20px;border:0;cursor:pointer;background:var(--blue);color:#fff;box-shadow:0 0 0 14px rgba(45,140,255,.18)}
+.rec.on{background:var(--teal);color:var(--navy);box-shadow:0 0 0 14px rgba(0,198,167,.28);animation:p 1.2s infinite}
+@keyframes p{50%{box-shadow:0 0 0 26px rgba(0,198,167,.12)}}@media(prefers-reduced-motion:reduce){.rec.on{animation:none}}
+.row{display:grid;grid-template-columns:1fr 70px 100px 44px;gap:6px;align-items:end;margin-bottom:8px}
+.row.h{font-size:12px;font-weight:700}
+.chk{background:#fff3c4;color:#5a4300;border-radius:10px;padding:10px;font-size:14px;margin:8px 0}
+.hl{background:rgba(0,198,167,.28)!important;border-color:var(--teal)!important}
+.tot{display:flex;justify-content:space-between;padding:4px 0}.tot.g{font-weight:700;font-size:20px}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;background:var(--navy);color:#fff}
+.pill.Aceptado{background:var(--teal);color:var(--navy)}.pill.Rechazado{background:#b3261e}.pill.Enviado{background:var(--blue)}
+.q{display:flex;justify-content:space-between;gap:8px;cursor:pointer;width:100%;text-align:left;border:0;font:inherit;color:inherit}
+#doc{background:#fff;color:#111;padding:22px;border-radius:6px;font-size:13px;box-shadow:0 1px 8px rgba(0,0,0,.2)}
+#doc table{width:100%;border-collapse:collapse;margin:14px 0}#doc th{text-align:left;border-bottom:2px solid #0B1F3B;padding:6px 4px}
+#doc td{padding:6px 4px;border-bottom:1px solid #ddd}#doc .r{text-align:right}
+.foot{text-align:center;font-weight:300;font-size:12px;color:var(--mute);margin-top:24px}
+@media print{body *{visibility:hidden}#doc,#doc *{visibility:visible}#doc{position:absolute;left:0;top:0;width:100%;box-shadow:none}}
+</style></head><body>
+<header class="top"><b>Presupuestos por voz</b><button id="hb" onclick="go('home')" hidden>Inicio</button></header>
+<main id="app"></main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={co:null,qs:[]},q=null,view='home',tr='';
+try{S=JSON.parse(localStorage.getItem('pv')||'null')||S}catch(e){}
+const save=()=>{try{localStorage.setItem('pv',JSON.stringify(S))}catch(e){}};
+const eur=c=>(c/100).toLocaleString('es-ES',{style:'currency',currency:'EUR'});
+const cents=v=>Math.round(parseFloat(String(v).replace(/\./g,'').replace(',','.')||0)*100)||0;
+const num=c=>(c/100).toFixed(2).replace('.',',');
+const calc=d=>{const b=d.lines.reduce((a,l)=>a+Math.round(l.qty*l.unit),0),iva=Math.round(b*d.iva/100);return{b,iva,t:b+iva}};
+function parse(t){
+ const out={client:'',desc:'',lines:[],flags:[]};
+ const m=t.match(/cliente\s+([^.,;]+)/i);if(m)out.client=m[1].trim();else out.flags.push('No he detectado el cliente.');
+ const re=/(material(?:es)?|mano de obra)[^\d]{0,25}?(\d+(?:[.,]\d{1,2})?)\s*(?:euros?|€)/gi;let r;
+ while((r=re.exec(t))){out.lines.push({type:/mano/i.test(r[1])?'Mano de obra':'Material',qty:1,unit:cents(r[2])})}
+ if(!out.lines.length)out.flags.push('No he encontrado importes. Añádelos a mano.');
+ const rest=t.split(/(?<=[.;])\s+/).filter(s=>!/^cliente/i.test(s.trim())&&!re.test(s)&&!/(material|mano de obra)/i.test(s));re.lastIndex=0;
+ let d=rest.join(' ').replace(/[.]+$/,'').trim();out.desc=d?d[0].toUpperCase()+d.slice(1):'';
+ if(!out.desc)out.flags.push('Falta la descripción del trabajo.');
+ return out}
+function newQ(text){const p=parse(text);const co=S.co;return{id:Date.now(),n:(new Date().getFullYear())+'-'+String(S.qs.length+1).padStart(4,'0'),date:new Date().toISOString().slice(0,10),
+ client:p.client,phone:'',desc:p.desc,lines:p.lines.length?p.lines:[{type:'Material',qty:1,unit:0}],iva:co.iva,valid:co.valid,status:'Borrador',flags:p.flags,raw:text}}
+function go(v){view=v;render()}
+function render(){$('#hb').hidden=!S.co||view==='home';const a=$('#app');
+ if(!S.co&&view!=='onb'){view='welcome'}
+ a.innerHTML=({welcome,onb,home,rec,review,prev,hist}[view]||home)();}
+function welcome(){return`<h1>Dicta. Revisa. Envía.</h1><p>Haz presupuestos hablando y envíalos en PDF por WhatsApp, correo o impresos.</p><button class="btn" onclick="go('onb')">Crear mi empresa</button><p class="foot">Ideas into useful technology<br>Kiwiman Digital Labs</p>`}
+function onb(){return`<h2>Datos de tu empresa</h2><div class="card">
+<label for="c1">Nombre o razón social</label><input id="c1" autocomplete="organization">
+<label for="c2">NIF/CIF</label><input id="c2"><label for="c3">Dirección</label><input id="c3" autocomplete="street-address">
+<label for="c4">Teléfono</label><input id="c4" type="tel"><label for="c5">Correo</label><input id="c5" type="email">
+<label for="c6">IVA por defecto (%)</label><input id="c6" inputmode="decimal" value="21"><label for="c7">Validez de la oferta (días)</label><input id="c7" inputmode="numeric" value="30">
+<label for="c8">Condiciones por defecto</label><textarea id="c8" rows="3">Pago a la finalización del trabajo.</textarea></div>
+<button class="btn ok" onclick="saveCo()">Guardar y empezar</button>`}
+function saveCo(){const g=i=>$('#c'+i).value.trim();if(!g(1))return alert('Escribe el nombre de tu empresa.');
+ S.co={name:g(1),nif:g(2),addr:g(3),tel:g(4),mail:g(5),iva:parseFloat(g(6).replace(',','.'))||21,valid:parseInt(g(7))||30,terms:g(8)};save();go('home')}
+function home(){return`<button class="rec" onclick="go('rec')" aria-label="Nuevo presupuesto por voz">Nuevo presupuesto<br>por voz</button>
+<button class="btn alt" onclick="tr='';startManual()">Escribirlo a mano</button>
+<button class="btn alt" onclick="go('hist')">Historial (${S.qs.length})</button>
+<h2 style="margin-top:20px">Últimos presupuestos</h2>${list(S.qs.slice(-3).reverse())}
+<p class="foot">Ideas into useful technology</p>`}
+function list(a){return a.length?a.map(x=>`<div class="card"><button class="q" onclick="open_(${x.id})"><span><b>${esc(x.client||'Sin cliente')}</b><br><span class="mute">${esc(x.n)} · ${eur(calc(x).t)}</span></span><span class="pill ${x.status}">${x.status}</span></button></div>`).join(''):'<p class="mute">Aún no hay presupuestos. Pulsa el botón y dicta el primero.</p>'}
+let rc=null,live=false;
+function rec(){const ok='webkitSpeechRecognition'in window||'SpeechRecognition'in window;
+ return`<h2>Dicta el trabajo</h2><p class="mute">Ejemplo: «Cliente Juan Pérez. Tubería principal rota, hay que sustituirla por una nueva. Material 200 euros, mano de obra 50 euros.»</p>
+${ok?`<button class="rec ${live?'on':''}" id="rb" onclick="toggleRec()">${live?'Escuchando…<br>Toca para parar':'Grabar'}</button>`:'<div class="chk">Tu navegador no permite dictar. Escribe el texto aquí abajo.</div>'}
+<p class="mute">Si el botón no te deja grabar, toca el cuadro y usa el micrófono de tu teclado.</p><label for="tx">Texto dictado (puedes corregirlo)</label><textarea id="tx" rows="5">${esc(tr)}</textarea>
+<button class="btn ok" onclick="tr=$('#tx').value;if(!tr.trim())return alert('Dicta o escribe algo primero.');q=newQ(tr);go('review')">Crear borrador</button>`}
+function toggleRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(live){rc&&rc.stop();return}
+ rc=new SR();rc.lang='es-ES';rc.continuous=true;rc.interimResults=true;const base=$('#tx').value;
+ rc.onresult=e=>{let s='';for(const r of e.results)s+=r[0].transcript;tr=(base?base+' ':'')+s;$('#tx').value=tr};
+ rc.onend=()=>{live=false;render();$('#tx').value=tr};rc.onerror=e=>{const m={'not-allowed':'No tengo permiso para usar el micrófono. Permítelo en el navegador, o abre esta página en una pestaña propia (fuera de Claude) y vuelve a probar. Mientras tanto, usa el micrófono del teclado del móvil en el cuadro de texto.','service-not-allowed':'Este navegador bloquea el dictado aquí. Abre la página en Chrome o Safari en una pestaña propia, o usa el micrófono del teclado.','no-speech':'No te he oído. Acércate al micrófono e inténtalo de nuevo.','audio-capture':'No encuentro ningún micrófono.','network':'El dictado necesita conexión a internet.'};alert(m[e.error]||'No te hemos entendido bien. Inténtalo de nuevo o escríbelo.')};
+ try{rc.start();live=true}catch(e){alert('No se pudo iniciar el dictado. Usa el micrófono del teclado.')}render();$('#tx').value=tr}
+function startManual(){q=newQ('');q.flags=[];go('review')}
+function review(){const t=calc(q);
+ return`<h2>Revisa el borrador</h2><p class="mute">Revisa los importes antes de enviar.</p>
+${q.flags.map(f=>`<div class="chk">⚠ ${esc(f)}</div>`).join('')}
+<div class="card"><label for="k1">Cliente</label><input id="k1" value="${esc(q.client)}" oninput="q.client=this.value">
+<label for="k2">Teléfono (para WhatsApp)</label><input id="k2" type="tel" value="${esc(q.phone)}" oninput="q.phone=this.value">
+<label for="k3">Trabajo a realizar</label><textarea id="k3" rows="3" oninput="q.desc=this.value">${esc(q.desc)}</textarea></div>
+<div class="card"><div class="row h"><span>Concepto</span><span>Cant.</span><span>Precio €</span><span></span></div>
+${q.lines.map((l,i)=>`<div class="row"><input aria-label="Concepto" value="${esc(l.type)}" oninput="q.lines[${i}].type=this.value">
+<input aria-label="Cantidad" inputmode="decimal" value="${l.qty}" oninput="q.lines[${i}].qty=parseFloat(this.value.replace(',','.'))||0;tot()">
+<input class="hl" aria-label="Precio unitario" inputmode="decimal" value="${num(l.unit)}" oninput="q.lines[${i}].unit=cents(this.value);tot()">
+<button class="btn alt sm" style="margin:0;padding:0;min-height:48px" aria-label="Quitar línea" onclick="q.lines.splice(${i},1);render()">✕</button></div>`).join('')}
+<button class="btn alt sm" onclick="q.lines.push({type:'Material',qty:1,unit:0});render()">+ Añadir línea</button>
+<label for="k4">IVA (%)</label><input id="k4" inputmode="decimal" value="${q.iva}" oninput="q.iva=parseFloat(this.value.replace(',','.'))||0;tot()"></div>
+<div class="card" id="tt">${tots(t)}</div>
+<button class="btn ok" onclick="confirmQ()">Confirmar y generar PDF</button>`}
+const tots=t=>`<div class="tot"><span>Base imponible</span><span>${eur(t.b)}</span></div><div class="tot"><span>IVA (${q.iva}%)</span><span>${eur(t.iva)}</span></div><div class="tot g"><span>Total</span><span>${eur(t.t)}</span></div>`;
+function tot(){$('#tt').innerHTML=tots(calc(q))}
+function confirmQ(){if(!q.client.trim())return alert('Falta el nombre del cliente.');if(!q.lines.length||calc(q).b<=0)return alert('Añade al menos una línea con importe.');
+ q.reviewed=true;if(!S.qs.find(x=>x.id===q.id))S.qs.push(q);save();go('prev')}
+function open_(id){q=S.qs.find(x=>x.id===id);go('prev')}
+function prev(){const c=S.co,t=calc(q);const d=new Date(q.date);const v=new Date(d.getTime()+q.valid*864e5);const f=x=>x.toLocaleDateString('es-ES');
+ return`<div id="doc"><div style="display:flex;justify-content:space-between;gap:10px"><div><b style="font-size:17px">${esc(c.name)}</b><br>${esc(c.nif)}<br>${esc(c.addr)}<br>${esc(c.tel)} ${esc(c.mail)}</div><div style="text-align:right"><b style="font-size:17px">PRESUPUESTO</b><br>Nº ${esc(q.n)}<br>${f(d)}<br>Válido hasta ${f(v)}</div></div>
+<p><b>Cliente:</b> ${esc(q.client)}</p><p>${esc(q.desc)}</p>
+<table><tr><th>Concepto</th><th class="r">Cant.</th><th class="r">Precio</th><th class="r">Importe</th></tr>${q.lines.map(l=>`<tr><td>${esc(l.type)}</td><td class="r">${l.qty}</td><td class="r">${eur(l.unit)}</td><td class="r">${eur(Math.round(l.qty*l.unit))}</td></tr>`).join('')}</table>
+<div style="text-align:right">Base imponible: ${eur(t.b)}<br>IVA (${q.iva}%): ${eur(t.iva)}<br><b style="font-size:16px">Total: ${eur(t.t)}</b></div>
+<p style="font-size:11px;margin-top:18px">${esc(c.terms)}</p></div>
+<h2 style="margin-top:16px">Presupuesto listo</h2>
+<button class="btn" onclick="wa()">Enviar por WhatsApp</button>
+<button class="btn alt" onclick="mail()">Enviar por correo</button>
+<button class="btn alt" onclick="mark('Enviado');window.print()">Imprimir o guardar PDF</button>
+<div class="card"><label for="st">Estado</label><select id="st" onchange="mark(this.value)">${['Borrador','Enviado','Aceptado','Rechazado','Caducado'].map(s=>`<option ${s===q.status?'selected':''}>${s}</option>`).join('')}</select></div>
+<button class="btn alt sm" onclick="dup()">Duplicar presupuesto</button>`}
+function mark(s){q.status=s;save()}
+function txt(){return`Hola ${q.client}, te envío el presupuesto ${q.n} de ${S.co.name}: ${q.desc}. Total ${eur(calc(q).t)} (IVA incluido). Te adjunto el PDF.`}
+function wa(){mark('Enviado');const p=q.phone.replace(/\D/g,'');window.open('https://wa.me/'+(p.length===9?'34'+p:p)+'?text='+encodeURIComponent(txt()),'_blank');alert('Se abre WhatsApp con el mensaje. Guarda el PDF desde «Imprimir o guardar PDF» y adjúntalo.')}
+function mail(){mark('Enviado');location.href='mailto:?subject='+encodeURIComponent('Presupuesto '+q.n+' · '+S.co.name)+'&body='+encodeURIComponent(txt())}
+function dup(){const c=JSON.parse(JSON.stringify(q));c.id=Date.now();c.n=new Date().getFullYear()+'-'+String(S.qs.length+1).padStart(4,'0');c.status='Borrador';c.date=new Date().toISOString().slice(0,10);q=c;go('review')}
+let fl='Todos',sq='';
+function hist(){const a=S.qs.filter(x=>(fl==='Todos'||x.status===fl)&&(x.client+x.n).toLowerCase().includes(sq.toLowerCase())).reverse();
+ return`<h2>Historial</h2><input aria-label="Buscar" placeholder="Buscar cliente o número" value="${esc(sq)}" oninput="sq=this.value;$('#hl').innerHTML=hlist()">
+<select aria-label="Filtrar por estado" onchange="fl=this.value;$('#hl').innerHTML=hlist()" style="margin:8px 0">${['Todos','Borrador','Enviado','Aceptado','Rechazado','Caducado'].map(s=>`<option ${s===fl?'selected':''}>${s}</option>`).join('')}</select><div id="hl">${hlist()}</div>`}
+function hlist(){return list(S.qs.filter(x=>(fl==='Todos'||x.status===fl)&&(x.client+x.n).toLowerCase().includes(sq.toLowerCase())).reverse())}
+render();
+</script></body></html>
