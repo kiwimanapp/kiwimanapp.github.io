@@ -51,7 +51,7 @@ const num=c=>(c/100).toFixed(2).replace('.',',');
 const calc=d=>{const b=d.lines.reduce((a,l)=>a+Math.round(l.qty*l.unit),0),iva=Math.round(b*d.iva/100);return{b,iva,t:b+iva}};
 function parse(t){
  const out={client:'',desc:'',lines:[],flags:[]};
- const m=t.match(/cliente\s+([^.,;]+)/i);if(m)out.client=m[1].trim();else out.flags.push('No he detectado el cliente.');
+ const m=t.match(/(?:cliente|casa de)\s+([^.,;]+?)(?=\s+(?:y|que|donde|me)\s|[.,;]|$)/i);if(m)out.client=m[1].trim();else out.flags.push('No he detectado el cliente.');
  const re=/(material(?:es)?|mano de obra)[^\d]{0,25}?(\d+(?:[.,]\d{1,2})?)\s*(?:euros?|€)/gi;let r;
  while((r=re.exec(t))){out.lines.push({type:/mano/i.test(r[1])?'Mano de obra':'Material',qty:1,unit:cents(r[2])})}
  if(!out.lines.length)out.flags.push('No he encontrado importes. Añádelos a mano.');
@@ -86,13 +86,20 @@ function rec(){const ok='webkitSpeechRecognition'in window||'SpeechRecognition'i
  return`<h2>Dicta el trabajo</h2><p class="mute">Ejemplo: «Cliente Juan Pérez. Tubería principal rota, hay que sustituirla por una nueva. Material 200 euros, mano de obra 50 euros.»</p>
 ${ok?`<button class="rec ${live?'on':''}" id="rb" onclick="toggleRec()">${live?'Escuchando…<br>Toca para parar':'Grabar'}</button>`:'<div class="chk">Tu navegador no permite dictar. Escribe el texto aquí abajo.</div>'}
 <p class="mute">Si el botón no te deja grabar, toca el cuadro y usa el micrófono de tu teclado.</p><label for="tx">Texto dictado (puedes corregirlo)</label><textarea id="tx" rows="5">${esc(tr)}</textarea>
-<button class="btn ok" onclick="tr=$('#tx').value;if(!tr.trim())return alert('Dicta o escribe algo primero.');q=newQ(tr);go('review')">Crear borrador</button>`}
+<button class="btn ok" id="cb" onclick="makeDraft()">Crear borrador</button>`}
 function toggleRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(live){rc&&rc.stop();return}
  rc=new SR();rc.lang='es-ES';rc.continuous=true;rc.interimResults=true;const base=$('#tx').value;
  rc.onresult=e=>{let s='';for(const r of e.results)s+=r[0].transcript;tr=(base?base+' ':'')+s;$('#tx').value=tr};
  rc.onend=()=>{live=false;render();$('#tx').value=tr};rc.onerror=e=>{const m={'not-allowed':'No tengo permiso para usar el micrófono. Permítelo en el navegador, o abre esta página en una pestaña propia (fuera de Claude) y vuelve a probar. Mientras tanto, usa el micrófono del teclado del móvil en el cuadro de texto.','service-not-allowed':'Este navegador bloquea el dictado aquí. Abre la página en Chrome o Safari en una pestaña propia, o usa el micrófono del teclado.','no-speech':'No te he oído. Acércate al micrófono e inténtalo de nuevo.','audio-capture':'No encuentro ningún micrófono.','network':'El dictado necesita conexión a internet.'};alert(m[e.error]||'No te hemos entendido bien. Inténtalo de nuevo o escríbelo.')};
  try{rc.start();live=true}catch(e){alert('No se pudo iniciar el dictado. Usa el micrófono del teclado.')}render();$('#tx').value=tr}
+async function makeDraft(){tr=$('#tx').value;if(!tr.trim())return alert('Dicta o escribe algo primero.');
+ const b=$('#cb');b.disabled=true;b.textContent='Preparando el presupuesto…';let p=null;
+ try{const sm=await claude.use('sample');if(sm){p=await sm.json(`Eres un asistente de presupuestos para técnicos de reparación en España. El técnico ha dictado esto, tal cual lo dijo: «${tr}»\n\nConviértelo en un presupuesto. Responde SOLO con JSON con esta forma: {"client":"nombre del cliente o cadena vacía","desc":"resumen breve del trabajo","lines":[{"concept":"concepto profesional redactado como sustantivo, por ejemplo Sustitución de tubería rota o Reparación de grifo y cambio de junta tórica","type":"Material|Mano de obra|Servicio","qty":1,"price":número en euros sin IVA, o null si no lo ha dicho}]}. Reglas: una línea por trabajo; quita muletillas y frases como estoy en casa de; nunca inventes precios ni nombres (usa null o cadena vacía); si dijo material y mano de obra por separado, haz líneas separadas; español de España.`,{modelTier:'quick'})}}catch(e){}
+ if(p&&Array.isArray(p.lines)&&p.lines.length){const d=newQ('');d.client=p.client||'';d.desc=p.desc||'';d.raw=tr;
+  d.lines=p.lines.map(l=>({type:String(l.concept||l.type||'Trabajo'),qty:Number(l.qty)||1,unit:l.price==null?0:Math.round(Number(l.price)*100)||0}));
+  d.flags=[];if(!d.client)d.flags.push('No he detectado el cliente.');if(d.lines.some(l=>!l.unit))d.flags.push('Faltan precios en alguna línea. Complétalos antes de enviar.');q=d}else{q=newQ(tr)}
+ go('review')}
 function startManual(){q=newQ('');q.flags=[];go('review')}
 function review(){const t=calc(q);
  return`<h2>Revisa el borrador</h2><p class="mute">Revisa los importes antes de enviar.</p>
