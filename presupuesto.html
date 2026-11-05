@@ -49,14 +49,28 @@ const eur=c=>(c/100).toLocaleString('es-ES',{style:'currency',currency:'EUR'});
 const cents=v=>Math.round(parseFloat(String(v).replace(/\./g,'').replace(',','.')||0)*100)||0;
 const num=c=>(c/100).toFixed(2).replace('.',',');
 const calc=d=>{const b=d.lines.reduce((a,l)=>a+Math.round(l.qty*l.unit),0),iva=Math.round(b*d.iva/100);return{b,iva,t:b+iva}};
+function concepts(t){
+ const V=[[/^(cambi|sustitu|reemplaz|renov)/,'Sustitución de'],[/^(repar|arregl)/,'Reparación de'],[/^(instal|coloc|mont)/,'Instalación de'],[/^limpi/,'Limpieza de'],[/^(revis|comprob)/,'Revisión de'],[/^desatasc/,'Desatasco de']];
+ const A=/^(el|la|los|las|un|una|unos|unas|le|les|lo|se|me)\s+/;let last='';const out=[];
+ const cl=t.replace(/(?:estoy en\s+)?\b(?:cliente|casa de)\s+[^.,;]+?(?=\s+(?:y|que|donde|me)\s|[.,;]|$)/ig,'').replace(/(material(?:es)?|mano de obra)[^.;]*?\d+(?:[.,]\d+)?\s*(?:euros?|€)/ig,'').split(/[.;,]|\s+(?:y\s+además|además|y también|también)\s+|\s+y\s+(?=(?:cambi|sustitu|repar|arregl|instal|coloc|mont|limpi|revis|desatasc))/i);
+ for(let c of cl){c=(c||'').trim().toLowerCase().replace(/^(y|que)\s+/,'');if(!c)continue;
+  const w=c.match(/(?:^|\s)(cambi|sustitu|reemplaz|renov|repar|arregl|instal|coloc|mont|limpi|revis|comprob|desatasc)\w*/);
+  if(w){const v=V.find(x=>x[0].test(w[1]));const wd=w[0].trim();let o=c.slice(c.indexOf(wd)+wd.length).trim();
+   o=o.replace(/^(le|la|lo|les|los|las|se|me)\s+/,'').replace(/\s+por\s+(un|una)\s+\w+$/,'').replace(/^por\s+.*/,'').trim();
+   while(A.test(o))o=o.replace(A,'');
+   if(v[1][0]==='S')o=o.replace(/\s+rot[oa]s?(?=\s|$)/g,'');
+   if(!o)o=last;if(o)out.push(v[1]+' '+o)}
+  else{let n=c.replace(/^(me he encontrado|he encontrado|me encuentro|hay|tengo|tiene|veo)\s+/,'');while(A.test(n))n=n.replace(A,'');n=n.replace(/\s+rot[oa]s?(?=\s|$)/g,'').trim();if(n&&!/^(estoy|necesito|que)\b/.test(n))last=n}}
+ return out.map(s=>s[0].toUpperCase()+s.slice(1))}
 function parse(t){
  const out={client:'',desc:'',lines:[],flags:[]};
  const m=t.match(/(?:cliente|casa de)\s+([^.,;]+?)(?=\s+(?:y|que|donde|me)\s|[.,;]|$)/i);if(m)out.client=m[1].trim();else out.flags.push('No he detectado el cliente.');
  const re=/(material(?:es)?|mano de obra)[^\d]{0,25}?(\d+(?:[.,]\d{1,2})?)\s*(?:euros?|€)/gi;let r;
  while((r=re.exec(t))){out.lines.push({type:/mano/i.test(r[1])?'Mano de obra':'Material',qty:1,unit:cents(r[2])})}
- if(!out.lines.length)out.flags.push('No he encontrado importes. Añádelos a mano.');
+ if(!out.lines.length){const cs=concepts(t);if(cs.length){out.lines=cs.map(c=>({type:c,qty:1,unit:0}));out.flags.push('Faltan los precios de cada línea.')}else out.flags.push('No he encontrado importes. Añádelos a mano.')}
  const rest=t.split(/(?<=[.;])\s+/).filter(s=>!/^cliente/i.test(s.trim())&&!re.test(s)&&!/(material|mano de obra)/i.test(s));re.lastIndex=0;
  let d=rest.join(' ').replace(/[.]+$/,'').trim();out.desc=d?d[0].toUpperCase()+d.slice(1):'';
+ {const c2=concepts(t);if(c2.length)out.desc=c2.join(', ')}
  if(!out.desc)out.flags.push('Falta la descripción del trabajo.');
  return out}
 function newQ(text){const p=parse(text);const co=S.co;return{id:Date.now(),n:(new Date().getFullYear())+'-'+String(S.qs.length+1).padStart(4,'0'),date:new Date().toISOString().slice(0,10),
@@ -81,17 +95,17 @@ function home(){return`<button class="rec" onclick="go('rec')" aria-label="Nuevo
 <h2 style="margin-top:20px">Últimos presupuestos</h2>${list(S.qs.slice(-3).reverse())}
 <p class="foot">Ideas into useful technology</p>`}
 function list(a){return a.length?a.map(x=>`<div class="card"><button class="q" onclick="open_(${x.id})"><span><b>${esc(x.client||'Sin cliente')}</b><br><span class="mute">${esc(x.n)} · ${eur(calc(x).t)}</span></span><span class="pill ${x.status}">${x.status}</span></button></div>`).join(''):'<p class="mute">Aún no hay presupuestos. Pulsa el botón y dicta el primero.</p>'}
-let rc=null,live=false;
+let rc=null,live=false,stopReq=false;
 function rec(){const ok='webkitSpeechRecognition'in window||'SpeechRecognition'in window;
  return`<h2>Dicta el trabajo</h2><p class="mute">Ejemplo: «Cliente Juan Pérez. Tubería principal rota, hay que sustituirla por una nueva. Material 200 euros, mano de obra 50 euros.»</p>
 ${ok?`<button class="rec ${live?'on':''}" id="rb" onclick="toggleRec()">${live?'Escuchando…<br>Toca para parar':'Grabar'}</button>`:'<div class="chk">Tu navegador no permite dictar. Escribe el texto aquí abajo.</div>'}
 <p class="mute">Si el botón no te deja grabar, toca el cuadro y usa el micrófono de tu teclado.</p><label for="tx">Texto dictado (puedes corregirlo)</label><textarea id="tx" rows="5">${esc(tr)}</textarea>
 <button class="btn ok" id="cb" onclick="makeDraft()">Crear borrador</button>`}
 function toggleRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(live){rc&&rc.stop();return}
- rc=new SR();rc.lang='es-ES';rc.continuous=true;rc.interimResults=true;const base=$('#tx').value;
- rc.onresult=e=>{let s='';for(const r of e.results)s+=r[0].transcript;tr=(base?base+' ':'')+s;$('#tx').value=tr};
- rc.onend=()=>{live=false;render();$('#tx').value=tr};rc.onerror=e=>{const m={'not-allowed':'No tengo permiso para usar el micrófono. Permítelo en el navegador, o abre esta página en una pestaña propia (fuera de Claude) y vuelve a probar. Mientras tanto, usa el micrófono del teclado del móvil en el cuadro de texto.','service-not-allowed':'Este navegador bloquea el dictado aquí. Abre la página en Chrome o Safari en una pestaña propia, o usa el micrófono del teclado.','no-speech':'No te he oído. Acércate al micrófono e inténtalo de nuevo.','audio-capture':'No encuentro ningún micrófono.','network':'El dictado necesita conexión a internet.'};alert(m[e.error]||'No te hemos entendido bien. Inténtalo de nuevo o escríbelo.')};
+ if(live){stopReq=true;rc&&rc.stop();return}
+ rc=new SR();rc.lang='es-ES';rc.continuous=false;rc.interimResults=true;stopReq=false;let base=$('#tx').value;
+ rc.onresult=e=>{const r=e.results[e.results.length-1];tr=(base?base+' ':'')+r[0].transcript.trim();$('#tx').value=tr};
+ rc.onend=()=>{if(!stopReq){base=tr;try{rc.start();return}catch(e){}}live=false;render();$('#tx').value=tr};rc.onerror=e=>{stopReq=e.error!=='no-speech';const m={'not-allowed':'No tengo permiso para usar el micrófono. Permítelo en el navegador, o abre esta página en una pestaña propia (fuera de Claude) y vuelve a probar. Mientras tanto, usa el micrófono del teclado del móvil en el cuadro de texto.','service-not-allowed':'Este navegador bloquea el dictado aquí. Abre la página en Chrome o Safari en una pestaña propia, o usa el micrófono del teclado.','no-speech':'No te he oído. Acércate al micrófono e inténtalo de nuevo.','audio-capture':'No encuentro ningún micrófono.','network':'El dictado necesita conexión a internet.'};if(e.error!=='no-speech')alert(m[e.error]||'No te hemos entendido bien. Inténtalo de nuevo o escríbelo.')};
  try{rc.start();live=true}catch(e){alert('No se pudo iniciar el dictado. Usa el micrófono del teclado.')}render();$('#tx').value=tr}
 async function makeDraft(){tr=$('#tx').value;if(!tr.trim())return alert('Dicta o escribe algo primero.');
  const b=$('#cb');b.disabled=true;b.textContent='Preparando el presupuesto…';let p=null;
