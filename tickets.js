@@ -111,5 +111,55 @@ async function refresh(){let a=await allTickets();$('ticketHistory').innerHTML=a
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 $('ticketCamera').onclick=()=>$('ticketCameraInput').click();$('ticketGallery').onclick=()=>$('ticketGalleryInput').click();$('ticketCameraInput').onchange=e=>scan(e.target.files[0]);$('ticketGalleryInput').onchange=e=>scan(e.target.files[0]);$('ticketAddItem').onclick=()=>addItem();$('ticketCancel').onclick=()=>{$('ticketReview').hidden=true;pending=null;status('Ticket descartado. La imagen no se ha conservado.')};
 $('ticketSave').onclick=async()=>{let total=money($('ticketTotal').value),date=$('ticketDate').value,items=collectItems();if(!(total>0)){alert('Introduce el total del ticket.');return}if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Selecciona una fecha válida.');return}if(!items.length&&!confirm('No hay productos reconocidos. ¿Guardar solo el total del ticket?'))return;let ticket={id:'ticket_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),created:Date.now(),date,store:$('ticketStore').value.trim(),category:$('ticketCategory').value,total,items,raw:$('ticketRaw').value,expenseId:null};try{await saveTicket(ticket);window.dispatchEvent(new CustomEvent('kiwibudget:addTicketExpense',{detail:{cat:ticket.category,amount:ticket.total,date:ticket.date,ticketId:ticket.id}}));$('ticketReview').hidden=true;pending=null;status('Ticket guardado. La fotografía ya se ha descartado.');await refresh()}catch(e){status('No se pudo guardar el ticket: '+e.message)}};
-openDB().then(refresh).catch(e=>status('No se pudo abrir el historial local: '+e.message));
+
+const PRODUCT_SELECTION_KEY='kiwibudget_product_selection_v1';
+function productKey(name,unit){return String(name||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim()+'|'+String(unit||'ud.').toLowerCase()}
+function selectedProducts(){try{return JSON.parse(localStorage.getItem(PRODUCT_SELECTION_KEY)||'[]')}catch(e){return[]}}
+function saveSelectedProducts(a){localStorage.setItem(PRODUCT_SELECTION_KEY,JSON.stringify(a))}
+function dateValue(s){let d=new Date(String(s||'')+'T12:00:00');return Number.isNaN(d.getTime())?null:d}
+async function renderProductForecast(){
+ const host=document.getElementById('charts');if(!host||!db)return;
+ let panel=document.getElementById('productForecast');
+ if(!panel){panel=document.createElement('div');panel.className='card';panel.id='productForecast';panel.innerHTML='<h2>🛒 Mi cesta habitual</h2><p class="small">Selecciona los productos que quieres incluir en tu previsión mensual. Se utilizan los productos de los tickets guardados.</p><div id="productForecastList" class="small">Calculando compras…</div><div class="item" style="margin-top:12px"><span><b>Gasto mensual estimado</b><br><span class="small">Solo productos seleccionados con frecuencia calculable</span></span><b id="productForecastTotal">0,00 €</b></div><p class="small" id="productForecastNote">La estimación se basa en el intervalo medio entre compras y el coste medio por compra.</p>';const history=host.querySelector('#historyChart')?.parentElement;if(history)history.after(panel);else host.appendChild(panel)}
+ const tickets=await allTickets(),groups=new Map();
+ for(const ticket of tickets){
+  const d=dateValue(ticket.date);if(!d)continue;
+  const perTicket=new Map();
+  for(const item of (ticket.items||[])){
+   const name=String(item.name||'').trim(),price=Number(item.price)||0,qty=Number(item.quantity)||1,unit=item.unit||'ud.';
+   if(!name||price<=0)continue;
+   const key=productKey(name,unit),old=perTicket.get(key)||{name,unit,amount:0,quantity:0,dates:[]};
+   old.amount+=price;old.quantity+=qty;perTicket.set(key,old);
+  }
+  for(const [key,item] of perTicket){if(!groups.has(key))groups.set(key,{key,name:item.name,unit:item.unit,purchases:[]});groups.get(key).purchases.push({date:d,amount:item.amount,quantity:item.quantity,store:ticket.store||''})}
+ }
+ const selected=new Set(selectedProducts()),products=[...groups.values()].map(p=>{
+  p.purchases.sort((a,b)=>a.date-b.date);
+  const dates=[...new Map(p.purchases.map(x=>[x.date.toISOString().slice(0,10),x])).values()];
+  const gaps=[];for(let i=1;i<dates.length;i++)gaps.push((dates[i].date-dates[i-1].date)/86400000);
+  const avgGap=gaps.length?gaps.reduce((a,b)=>a+b,0)/gaps.length:0;
+  const avgCost=dates.length?dates.reduce((a,b)=>a+b.amount,0)/dates.length:0;
+  p.count=dates.length;p.avgGap=avgGap;p.avgCost=avgCost;p.monthly=avgGap>0?avgCost*30.4375/avgGap:null;
+  p.last=dates.length?dates[dates.length-1].date:null;return p
+ }).sort((a,b)=>(b.monthly||0)-(a.monthly||0)||a.name.localeCompare(b.name,'es'));
+ const list=document.getElementById('productForecastList');
+ if(!products.length){list.innerHTML='<div class="empty">Todavía no hay productos de tickets guardados. Escanea y guarda algunos tickets para crear tu cesta habitual.</div>';document.getElementById('productForecastTotal').textContent=euro(0);return}
+ list.innerHTML=products.map(p=>{
+  const checked=selected.has(p.key),freq=p.count<2?'Una compra registrada · faltan más compras':p.avgGap<1?'Aproximadamente a diario':'Cada '+Math.max(1,Math.round(p.avgGap))+' días de media';
+  const estimate=p.monthly===null?'Aún no calculable':euro(p.monthly)+'/mes';
+  return '<label class="item" style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" data-product-key="'+esc(p.key)+'" '+(checked?'checked':'')+' style="width:20px;height:20px;flex:0 0 auto"><span style="flex:1;min-width:0"><b>'+esc(p.name)+'</b><br><span class="small">'+p.count+' compras · '+freq+'</span></span><b style="white-space:nowrap">'+estimate+'</b></label>'
+ }).join('');
+ list.querySelectorAll('[data-product-key]').forEach(el=>el.addEventListener('change',()=>{
+  let now=new Set(selectedProducts());if(el.checked)now.add(el.dataset.productKey);else now.delete(el.dataset.productKey);saveSelectedProducts([...now]);updateProductTotal(products)
+ }));
+ updateProductTotal(products);
+}
+function updateProductTotal(products){
+ const chosen=new Set(selectedProducts()),sum=products.filter(p=>chosen.has(p.key)&&p.monthly!==null).reduce((a,p)=>a+p.monthly,0),unknown=products.filter(p=>chosen.has(p.key)&&p.monthly===null).length;
+ const out=document.getElementById('productForecastTotal');if(out)out.textContent=euro(sum);
+ const note=document.getElementById('productForecastNote');if(note)note.textContent='Estimación orientativa a partir de '+products.filter(p=>chosen.has(p.key)&&p.monthly!==null).length+' productos seleccionados.'+(unknown?' '+unknown+' producto(s) seleccionado(s) aún necesitan al menos dos fechas de compra.':'')+' Los precios y la frecuencia pueden variar.';
+}
+document.querySelector('[data-tab="charts"]')?.addEventListener('click',()=>setTimeout(()=>renderProductForecast().catch(e=>{const x=document.getElementById('productForecastList');if(x)x.textContent='No se pudo calcular el historial de productos.'}),0));
+
+openDB().then(async()=>{await refresh();await renderProductForecast()}).catch(e=>status('No se pudo abrir el historial local: '+e.message));
 })();
