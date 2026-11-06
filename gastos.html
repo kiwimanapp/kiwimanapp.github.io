@@ -47,7 +47,7 @@ function renderCharts(){
  const vals=keys.map(k=>({k,v:s.salary-fixed-sum((s.months[k].expenses||[]),x=>x.amount)})), max=Math.max(1,...vals.map(x=>Math.abs(x.v)));
  $('historyChart').innerHTML=vals.map(x=>'<div class="month-col" title="'+x.k+': '+eur(x.v)+'"><i style="height:'+Math.max(3,Math.abs(x.v)/max*100)+'%;background:'+(x.v>=0?'var(--g)':'var(--r)')+'"></i><small>'+x.k.slice(5)+'</small></div>').join('');
 }
-\nfunction add(cat,amount,card){if(!(amount>0)){alert('Introduce un importe válido.');return}ex().push({id:Date.now()+Math.random(),date:today(),cat,amount,card:!!card});save();render()}
+\nfunction add(cat,amount,card){if(!(amount>0)){alert('Introduce un importe válido.');return}ex().push({id:Date.now()+Math.random(),date:today(),cat,amount,card:!!card});save();render();renderCharts()}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.screen').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.tab).classList.add('on');scrollTo(0,0)});
 $('salary').onchange=e=>{s.salary=Math.max(0,n(e.target.value));save();render()};$('pct').onchange=e=>{s.pct=Math.max(0,Math.min(100,n(e.target.value)));save();render()};
 $('fixedEdit').onchange=e=>{let i=e.target.dataset.i,k=e.target.dataset.k;if(i===undefined)return;s.fixed[+i][+k]=k==='1'?Math.max(0,n(e.target.value)):e.target.value.trim()||'Gasto';save();render()};
@@ -56,7 +56,7 @@ $('addFixed').onclick=()=>{s.fixed.push(['Nuevo gasto',0,'f']);save();render()};
 $('cat').onchange=e=>{$('cardOpt').hidden=e.target.value==='Tarjeta de crédito';if($('cardOpt').hidden)$('paid').checked=false};
 $('addExpense').onclick=()=>{let c=$('cat').value;add(c,n($('amount').value),c!=='Tarjeta de crédito'&&$('paid').checked);$('amount').value='';$('paid').checked=false};
 $('addFood').onclick=()=>{add('Comida',n($('foodAmount').value),$('foodPaid').checked);$('foodAmount').value='';$('foodPaid').checked=false};
-document.addEventListener('click',e=>{if(e.target.dataset.id&&confirm('¿Eliminar este gasto?')){let a=ex(),i=a.findIndex(x=>String(x.id)===e.target.dataset.id);if(i>=0)a.splice(i,1);save();render()}});
+document.addEventListener('click',e=>{if(e.target.dataset.id&&confirm('¿Eliminar este gasto?')){let a=ex(),i=a.findIndex(x=>String(x.id)===e.target.dataset.id);if(i>=0)a.splice(i,1);save();render();renderCharts()}});
 $('copy').onclick=async()=>{$('backup').value=JSON.stringify(s,null,2);try{await navigator.clipboard.writeText($('backup').value);alert('Copia copiada.')}catch(e){$('backup').select();alert('Copia el texto seleccionado.')}};
 $('restore').onclick=()=>{try{let x=JSON.parse($('backup').value);if(!Array.isArray(x.fixed)||!x.months||typeof x.salary!=='number')throw 0;if(confirm('Esto sustituirá los datos actuales. ¿Continuar?')){s=x;save();render();alert('Copia restaurada.')}}catch(e){alert('El JSON no es válido.')}};
 render();
