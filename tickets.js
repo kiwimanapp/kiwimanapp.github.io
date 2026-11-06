@@ -32,7 +32,31 @@ function allTickets(){return new Promise((resolve,reject)=>{let q=db.transaction
 function saveTicket(t){return new Promise((resolve,reject)=>{let q=db.transaction('tickets','readwrite').objectStore('tickets').put(t);q.onsuccess=()=>resolve();q.onerror=()=>reject(q.error)})}
 function addItem(item={name:'',quantity:1,unit:'ud.',price:0}){let row=document.createElement('div');row.className='item';row.style.display='block';row.innerHTML=`<div class="grid"><div><label>Producto</label><input data-field="name" placeholder="Nombre" value=""></div><div><label>Precio (€)</label><input data-field="price" inputmode="decimal" placeholder="0,00"></div><div><label>Cantidad</label><input data-field="quantity" inputmode="decimal" value="1"></div><div><label>Unidad</label><select data-field="unit"><option>ud.</option><option>kg</option><option>g</option><option>litros</option><option>ml</option><option>paquete</option><option>servicio</option></select></div></div><button class="del" type="button">Eliminar línea</button>`;
 row.querySelector('[data-field="name"]').value=item.name||'';row.querySelector('[data-field="price"]').value=String(item.price||'').replace('.',',');row.querySelector('[data-field="quantity"]').value=item.quantity||1;row.querySelector('[data-field="unit"]').value=item.unit||'ud.';row.querySelector('button').onclick=()=>row.remove();$('ticketItems').appendChild(row)}
-function parseLines(text){let out=[];for(let line of text.split(/\\r?\\n/)){let clean=line.replace(/\\s+/g,' ').trim();if(!clean||/(TOTAL|SUBTOTAL|BASE IMP|IVA|EFECTIVO|TARJETA|CAMBIO|GRACIAS|DESCUENTO|IMPORTE|PAGADO|VUELTO)/i.test(clean))continue;let m=clean.match(/(.+?)\\s+(-?\\d+[,.]\\d{2})\\s*€?$/);if(!m)continue;let name=m[1].replace(/^[-*\\d. ]+/,'').trim();if(name.length<2)continue;out.push({name,quantity:1,unit:'ud.',price:money(m[2])})}return out.slice(0,60)}
+function parseLines(text){
+ const lines=text.split(/\\r?\\n/).map(x=>x.replace(/\\s+/g,' ').trim()).filter(Boolean),out=[];
+ const skip=/(TOTAL|SUBTOTAL|BASE IMP|IVA|EFECTIVO|TARJETA|CAMBIO|GRACIAS|DESCUENTO|IMPORTE|PAGADO|VUELTO|FACTURA|MERCADONA|TELÉFONO|TELEFONO|CANTIDAD|DESCRIPCIÓN|DESCRIPCION|P\\.? UNIT|IMPORTE)/i;
+ for(let i=0;i<lines.length;i++){
+  let line=lines[i]; if(skip.test(line))continue;
+  // Artículos vendidos por peso: el nombre y el peso pueden aparecer en líneas distintas.
+  let weight=line.match(/^(?:(\\d+)\\s+)?(.+?)\\s+(\\d+[,.]\\d{3,})\\s*(kg|g|l|ml)\\b.*?(\\d+[,.]\\d{2})\\s*€?$/i);
+  if(weight){out.push({name:weight[2].trim(),quantity:money(weight[3]),unit:weight[4].toLowerCase(),price:money(weight[5])});continue}
+  let next=lines[i+1]||'';
+  let splitWeight=next.match(/^(\\d+[,.]\\d{3,})\\s*(kg|g|l|ml)\\b.*?(\\d+[,.]\\d{2})\\s*€?$/i);
+  if(splitWeight && !skip.test(line)){
+   let nm=line.match(/^(?:\\d+\\s+)?(.+?)\\s*$/);
+   if(nm&&nm[1].length>1&&!/\\d+[,.]\\d{2}$/.test(line)){
+    out.push({name:nm[1].trim(),quantity:money(splitWeight[1]),unit:splitWeight[2].toLowerCase(),price:money(splitWeight[3])});i++;continue;
+   }
+  }
+  // Líneas normales: cantidad opcional al principio e importe al final.
+  let m=line.match(/^(?:(\\d+)\\s+)?(.+?)\\s+(-?\\d+[,.]\\d{2})\\s*€?$/);
+  if(!m)continue;
+  let name=m[2].replace(/^[-*\\d. ]+/,'').trim();
+  if(name.length<2||skip.test(name))continue;
+  out.push({name,quantity:m[1]?Number(m[1]):1,unit:'ud.',price:money(m[3])});
+ }
+ return out.slice(0,100);
+}
 async function loadOCR(){if(window.Tesseract)return window.Tesseract;status('Preparando el motor OCR local…');await new Promise((resolve,reject)=>{let s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';s.onload=resolve;s.onerror=()=>reject(Error('No se pudo descargar el motor OCR. Comprueba la conexión.'));document.head.appendChild(s)});return window.Tesseract}
 async function scan(file){if(!file||!file.type.startsWith('image/'))return;pending=null;$('ticketReview').hidden=true;status('Preparando imagen…');let url=URL.createObjectURL(file);try{let T=await loadOCR();if(!worker){worker=await T.createWorker('spa',1,{logger:m=>{if(m.status==='recognizing text')status('Leyendo ticket… '+Math.round((m.progress||0)*100)+'%')}})}status('Leyendo ticket en este dispositivo…');let result=await worker.recognize(url);let text=result.data.text||'';pending={date:new Date().toISOString().slice(0,10),store:'',category:'Comida',total:0,items:parseLines(text),raw:text};let lines=text.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);let totalLines=lines.filter(x=>/(TOTAL A PAGAR|TOTAL|IMPORTE TOTAL)/i.test(x));for(let l of totalLines.reverse()){let m=l.match(/(\\d+[,.]\\d{2})\\s*€?$/);if(m){pending.total=money(m[1]);break}}let dateMatch=text.match(/\\b(\\d{1,2})[\\/-](\\d{1,2})[\\/-](\\d{2,4})\\b/);if(dateMatch){let y=dateMatch[3].length===2?'20'+dateMatch[3]:dateMatch[3];pending.date=y+'-'+String(dateMatch[2]).padStart(2,'0')+'-'+String(dateMatch[1]).padStart(2,'0')}pending.store=lines.find(x=>/[A-ZÁÉÍÓÚÑ]{3,}/.test(x)&&x.length<45)||'';$('ticketStore').value=pending.store;$('ticketDate').value=pending.date;$('ticketCategory').value='Comida';$('ticketTotal').value=pending.total?String(pending.total).replace('.',','):'';$('ticketRaw').value=text;$('ticketItems').innerHTML='';pending.items.forEach(addItem);if(!pending.items.length)addItem();$('ticketReview').hidden=false;status('Lectura terminada. Revisa los datos antes de guardar.')}catch(e){status('No se pudo leer el ticket: '+e.message+'. Puedes volver a intentarlo.')}finally{URL.revokeObjectURL(url);file=null;$('ticketCameraInput').value='';$('ticketGalleryInput').value='';}}
 function collectItems(){return [...$('ticketItems').children].map(r=>({name:r.querySelector('[data-field="name"]').value.trim(),price:money(r.querySelector('[data-field="price"]').value),quantity:money(r.querySelector('[data-field="quantity"]').value),unit:r.querySelector('[data-field="unit"]').value})).filter(x=>x.name)}
