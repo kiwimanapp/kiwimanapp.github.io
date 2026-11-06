@@ -48,7 +48,7 @@ function renderCharts(){
  $('historyChart').innerHTML=vals.map(x=>'<div class="month-col" title="'+x.k+': '+eur(x.v)+'"><i style="height:'+Math.max(3,Math.abs(x.v)/max*100)+'%;background:'+(x.v>=0?'var(--g)':'var(--r)')+'"></i><small>'+x.k.slice(5)+'</small></div>').join('');
 }
 
-function add(cat,amount,card,date=today()){if(!(amount>0)){alert('Introduce un importe válido.');return}if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Selecciona una fecha válida.');return}let k=date.slice(0,7);md(k).expenses.push({id:Date.now()+Math.random(),date,cat,amount,card:!!card});save();render();renderCharts()}
+function add(cat,amount,card,date=today(),ticketId=null){if(!(amount>0)){alert('Introduce un importe válido.');return}if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Selecciona una fecha válida.');return}let k=date.slice(0,7);md(k).expenses.push({id:Date.now()+Math.random(),date,cat,amount,card:!!card,...(ticketId?{ticketId}: {})});save();render();renderCharts()}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.screen').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.tab).classList.add('on');if(b.dataset.tab==='charts'){try{renderCharts()}catch(err){$('categoryChart').textContent='No se han podido generar los gráficos. Tus gastos siguen guardados.';console.error(err)}}scrollTo(0,0)});
 $('addIncome').onclick=()=>{let amount=n($('incomeAmount').value),name=$('incomeName').value.trim()||'Ingreso extra';if(!(amount>0)){alert('Introduce un importe válido.');return}let date=$('incomeDate').value;if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Selecciona una fecha válida.');return}let target=md(date.slice(0,7));if(!Array.isArray(target.incomes))target.incomes=[];target.incomes.push({id:Date.now()+Math.random(),date,name,amount});save();$('incomeAmount').value='';$('incomeName').value='';$('incomeDate').value=today();render();renderCharts()};
 $('salary').onchange=e=>{s.salary=Math.max(0,n(e.target.value));save();render()};$('pct').onchange=e=>{s.pct=Math.max(0,Math.min(100,n(e.target.value)));save();render()};
@@ -62,6 +62,7 @@ document.addEventListener('click',e=>{if(e.target.dataset.income&&confirm('¿Eli
 $('copy').onclick=async()=>{$('backup').value=JSON.stringify(s,null,2);try{await navigator.clipboard.writeText($('backup').value);alert('Copia copiada.')}catch(e){$('backup').select();alert('Copia el texto seleccionado.')}};
 $('restore').onclick=()=>{try{let x=JSON.parse($('backup').value);if(!Array.isArray(x.fixed)||!x.months||typeof x.salary!=='number')throw 0;if(confirm('Esto sustituirá los datos actuales. ¿Continuar?')){s=x;save();render();alert('Copia restaurada.')}}catch(e){alert('El JSON no es válido.')}};
 $('expenseDate').value=today();$('foodDate').value=today();$('incomeDate').value=today();
+window.addEventListener('kiwibudget:addTicketExpense',e=>{let d=e.detail||{};add(d.cat,d.amount,false,d.date,d.ticketId)});
 render();
 })();
-</script></body></html>
+</script><script src="tickets.js"></script></body></html>
