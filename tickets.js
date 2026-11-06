@@ -114,15 +114,6 @@ $('ticketSave').onclick=async()=>{let total=money($('ticketTotal').value),date=$
 
 const PRODUCT_SELECTION_KEY='kiwibudget_product_selection_v1';
 function productKey(name,unit){return String(name||'').toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim()+'|'+String(unit||'ud.').toLowerCase()}
-const PRODUCT_IMAGES_KEY='kiwibudget_product_images_v1';
-function productImages(){try{return JSON.parse(localStorage.getItem(PRODUCT_IMAGES_KEY)||'{}')}catch(e){return{}}}
-function saveProductImage(key,url){const all=productImages();all[key]=url;localStorage.setItem(PRODUCT_IMAGES_KEY,JSON.stringify(all))}
-async function searchMercadonaImages(query){
- const url='https://7uzjk1dj0-dsn.algolia.net/1/indexes/products_prod_vlc1_es/query?x-algolia-application-id=7UZJKL1DJ0&x-algolia-api-key=9d8f2e39e90df472b4f2e559a116fe17';
- const res=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query, hitsPerPage:6})});
- if(!res.ok)throw Error('El catálogo no está disponible ahora mismo');
- const data=await res.json();return(data.hits||[]).filter(x=>x.thumbnail).map(x=>({name:x.display_name||x.name||query,image:x.thumbnail}));
-}
 function selectedProducts(){try{return JSON.parse(localStorage.getItem(PRODUCT_SELECTION_KEY)||'[]')}catch(e){return[]}}
 function saveSelectedProducts(a){localStorage.setItem(PRODUCT_SELECTION_KEY,JSON.stringify(a))}
 function dateValue(s){let d=new Date(String(s||'')+'T12:00:00');return Number.isNaN(d.getTime())?null:d}
@@ -156,16 +147,8 @@ async function renderProductForecast(){
  list.innerHTML=products.map(p=>{
   const checked=selected.has(p.key),freq=p.count<2?'Una compra registrada · faltan más compras':p.avgGap<1?'Aproximadamente a diario':'Cada '+Math.max(1,Math.round(p.avgGap))+' días de media';
   const estimate=p.monthly===null?'Aún no calculable':euro(p.monthly)+'/mes';
-  const photo=productImages()[p.key]||'';
-  return '<div class="item" style="display:flex;align-items:center;gap:10px"><input type="checkbox" data-product-key="'+esc(p.key)+'" '+(checked?'checked':'')+' style="width:20px;height:20px;flex:0 0 auto"><img src="'+esc(photo)+'" alt="" data-product-image="'+esc(p.key)+'" style="width:64px;height:64px;object-fit:contain;border-radius:8px;background:#f1f1f1;'+(photo?'':'display:none')+'"><span style="flex:1;min-width:0"><b>'+esc(p.name)+'</b><br><span class="small">'+p.count+' compras · '+freq+'</span><br><button type="button" data-image-search="'+esc(p.key)+'" data-image-name="'+esc(p.name)+'" class="alt" style="padding:5px 8px;margin-top:5px">Buscar/cambiar imagen</button><div id="image-results-'+esc(p.key)+'" class="small"></div></span><b style="white-space:nowrap">'+estimate+'</b></div>'
+  return '<div class="item" style="display:flex;align-items:center;gap:10px"><input type="checkbox" data-product-key="'+esc(p.key)+'" '+(checked?'checked':'')+' style="width:20px;height:20px;flex:0 0 auto"><span style="flex:1;min-width:0"><b>'+esc(p.name)+'</b><br><span class="small">'+p.count+' compras · '+freq+'</span></span><b style="white-space:nowrap">'+estimate+'</b></div>'
  }).join('');
- list.querySelectorAll('[data-image-search]').forEach(btn=>btn.addEventListener('click',async()=>{
-  const key=btn.dataset.imageSearch,name=btn.dataset.imageName,box=document.getElementById('image-results-'+key);box.textContent='Buscando en el catálogo de Mercadona…';
-  try{const hits=await searchMercadonaImages(name);if(!hits.length){box.textContent='No se encontraron imágenes. Puedes probar con un nombre más corto.';return}
-   box.innerHTML=hits.map((h,i)=>'<button type="button" data-pick-image="'+i+'" style="display:inline-flex;align-items:center;gap:5px;margin:4px;padding:5px;border:1px solid #ccc;border-radius:8px;background:transparent"><img src="'+esc(h.image)+'" style="width:48px;height:48px;object-fit:contain"><span style="max-width:110px;white-space:normal">'+esc(h.name)+'</span></button>').join('');
-   box.querySelectorAll('[data-pick-image]').forEach((b,i)=>b.addEventListener('click',()=>{saveProductImage(key,hits[i].image);const img=list.querySelector('[data-product-image="'+CSS.escape(key)+'"]');if(img){img.src=hits[i].image;img.style.display='block'}box.textContent='Imagen guardada.'}));
-  }catch(e){box.textContent=e.message+'. Puedes intentarlo más tarde.'}
- }));
  list.querySelectorAll('[data-product-key]').forEach(el=>el.addEventListener('change',()=>{
   let now=new Set(selectedProducts());if(el.checked)now.add(el.dataset.productKey);else now.delete(el.dataset.productKey);saveSelectedProducts([...now]);updateProductTotal(products)
  }));
