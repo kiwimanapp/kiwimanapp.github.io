@@ -35,20 +35,16 @@ row.querySelector('[data-field="name"]').value=item.name||'';row.querySelector('
 function parseLines(text){
  const lines=text.split(/\\r?\\n/).map(x=>x.replace(/\\s+/g,' ').trim()).filter(Boolean),out=[];
  const skip=/(TOTAL|SUBTOTAL|BASE IMP|IVA|EFECTIVO|TARJETA|CAMBIO|GRACIAS|DESCUENTO|IMPORTE|PAGADO|VUELTO|FACTURA|MERCADONA|TELÉFONO|TELEFONO|CANTIDAD|DESCRIPCIÓN|DESCRIPCION|P\\.? UNIT|IMPORTE)/i;
+ const weighted=(line,nameHint='')=>{
+  const w=line.match(/(\\d+[,.]\\d{3,})\\s*(kg|g|l|ml)\\b/i);if(!w)return null;
+  const nums=[...line.matchAll(/(\\d+[,.]\\d{2})/g)];if(!nums.length)return null;
+  return {name:nameHint||line.slice(0,w.index).replace(/^\\d+\\s+/,'').trim(),quantity:money(w[1]),unit:w[2].toLowerCase(),price:money(nums[nums.length-1][1])};
+ };
  for(let i=0;i<lines.length;i++){
-  let line=lines[i]; if(skip.test(line))continue;
-  // Artículos vendidos por peso: el nombre y el peso pueden aparecer en líneas distintas.
-  let weight=line.match(/^(?:(\\d+)\\s+)?(.+?)\\s+(\\d+[,.]\\d{3,})\\s*(kg|g|l|ml)\\b.*?(\\d+[,.]\\d{2})\\s*€?$/i);
-  if(weight){out.push({name:weight[2].trim(),quantity:money(weight[3]),unit:weight[4].toLowerCase(),price:money(weight[5])});continue}
-  let next=lines[i+1]||'';
-  let splitWeight=next.match(/^(\\d+[,.]\\d{3,})\\s*(kg|g|l|ml)\\b.*?(\\d+[,.]\\d{2})\\s*€?$/i);
-  if(splitWeight && !skip.test(line)){
-   let nm=line.match(/^(?:\\d+\\s+)?(.+?)\\s*$/);
-   if(nm&&nm[1].length>1&&!/\\d+[,.]\\d{2}$/.test(line)){
-    out.push({name:nm[1].trim(),quantity:money(splitWeight[1]),unit:splitWeight[2].toLowerCase(),price:money(splitWeight[3])});i++;continue;
-   }
-  }
-  // Líneas normales: cantidad opcional al principio e importe al final.
+  let line=lines[i];if(skip.test(line))continue;
+  let inline=weighted(line);if(inline&&inline.name.length>1){out.push(inline);continue}
+  let next=lines[i+1]||'',split=weighted(next,line.replace(/^\\d+\\s+/,'').trim());
+  if(split&&split.name.length>1&&!/\\d+[,.]\\d{2}$/.test(line)){out.push(split);i++;continue}
   let m=line.match(/^(?:(\\d+)\\s+)?(.+?)\\s+(-?\\d+[,.]\\d{2})\\s*€?$/);
   if(!m)continue;
   let name=m[2].replace(/^[-*\\d. ]+/,'').trim();
