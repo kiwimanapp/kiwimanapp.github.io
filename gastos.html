@@ -49,7 +49,7 @@ function renderCharts(){
 }
 
 function add(cat,amount,card){if(!(amount>0)){alert('Introduce un importe válido.');return}ex().push({id:Date.now()+Math.random(),date:today(),cat,amount,card:!!card});save();render();renderCharts()}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.screen').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.tab).classList.add('on');scrollTo(0,0)});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button,.screen').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.tab).classList.add('on');if(b.dataset.tab==='charts'){try{renderCharts()}catch(err){$('categoryChart').textContent='No se han podido generar los gráficos. Tus gastos siguen guardados.';console.error(err)}}scrollTo(0,0)});
 $('salary').onchange=e=>{s.salary=Math.max(0,n(e.target.value));save();render()};$('pct').onchange=e=>{s.pct=Math.max(0,Math.min(100,n(e.target.value)));save();render()};
 $('fixedEdit').onchange=e=>{let i=e.target.dataset.i,k=e.target.dataset.k;if(i===undefined)return;s.fixed[+i][+k]=k==='1'?Math.max(0,n(e.target.value)):e.target.value.trim()||'Gasto';save();render()};
 $('fixedEdit').onclick=e=>{if(e.target.dataset.del!==undefined&&confirm('¿Borrar este gasto?')){s.fixed.splice(+e.target.dataset.del,1);save();render()}};
@@ -60,6 +60,6 @@ $('addFood').onclick=()=>{add('Comida',n($('foodAmount').value),$('foodPaid').ch
 document.addEventListener('click',e=>{if(e.target.dataset.id&&confirm('¿Eliminar este gasto?')){let a=ex(),i=a.findIndex(x=>String(x.id)===e.target.dataset.id);if(i>=0)a.splice(i,1);save();render();renderCharts()}});
 $('copy').onclick=async()=>{$('backup').value=JSON.stringify(s,null,2);try{await navigator.clipboard.writeText($('backup').value);alert('Copia copiada.')}catch(e){$('backup').select();alert('Copia el texto seleccionado.')}};
 $('restore').onclick=()=>{try{let x=JSON.parse($('backup').value);if(!Array.isArray(x.fixed)||!x.months||typeof x.salary!=='number')throw 0;if(confirm('Esto sustituirá los datos actuales. ¿Continuar?')){s=x;save();render();alert('Copia restaurada.')}}catch(e){alert('El JSON no es válido.')}};
-render();renderCharts();
+render();
 })();
 </script></body></html>
