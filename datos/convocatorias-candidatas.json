@@ -1,8 +1,16 @@
 {
-  "ultima_consulta_utc": null,
-  "estado_consulta": "pendiente_primera_ejecucion",
-  "nota": "Aún no se ha ejecutado la consulta automática. Las coincidencias futuras serán candidatas, no plazas abiertas confirmadas.",
-  "fuentes_consultadas": [],
-  "errores": [],
+  "ultima_consulta_utc": "2026-11-07T16:14:40+00:00",
+  "estado_consulta": "parcial",
+  "nota": "Son coincidencias preliminares. No se consideran convocatorias abiertas ni se cuentan plazas hasta verificar bases, localidad y plazo en la fuente oficial.",
+  "fuentes_consultadas": [
+    "API oficial BOE (últimos 4 sumarios)",
+    "RSS oficial BOJA"
+  ],
+  "errores": [
+    "BOE 20261107: HTTP 400",
+    "BOE 20261106: HTTP 400",
+    "BOE 20261105: HTTP 400",
+    "BOE 20261104: HTTP 400"
+  ],
   "candidatas": []
 }
