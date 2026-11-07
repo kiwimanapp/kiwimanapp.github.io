@@ -14,7 +14,8 @@ HEADERS = {
     "User-Agent": "KiwimanDigitalLabs-Convocatorias/1.0 (consulta de fuentes oficiales)",
     "Accept": "application/xml",
 }
-KEYWORDS = re.compile(r"\b(inform[aá]tic|microinform[aá]tic|sistem|soporte t[eé]cnic|redes|t[eé]cnic[oa] auxiliar inform[aá]tic|administrador.{0,20}sistema|programador|desarrollador)\b", re.I)
+ICT_KEYWORDS = re.compile(r"\b(inform[aá]tic|microinform[aá]tic|soporte t[eé]cnic|administrador.{0,20}sistema|programador|desarrollador|sistemas inform[aá]ticos|t[eé]cnic[oa] de sistemas|redes inform[aá]ticas)\b", re.I)
+EMPLOYMENT_KEYWORDS = re.compile(r"\b(convocatoria|proceso selectivo|selecci[oó]n de personal|oferta de empleo|bolsa de empleo|plaza[s]?|personal laboral|funcionario|oposici[oó]n|concurso-oposici[oó]n)\b", re.I)
 PLACES = {
     "El Puerto de Santa María": ["el puerto de santa maría", "el puerto de santa maria"],
     "Rota": ["rota"],
@@ -60,7 +61,7 @@ def extract_records(root, source):
         full = text_of(node)
         if not title:
             title = full[:240]
-        if title and (KEYWORDS.search(title) or KEYWORDS.search(full)):
+        if title and ICT_KEYWORDS.search(title + " " + full) and EMPLOYMENT_KEYWORDS.search(title + " " + full):
             records.append({"fuente": source, "titulo": title[:500], "url": link, "texto_indice": full[:1800]})
     return records
 
