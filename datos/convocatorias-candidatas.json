@@ -1,5 +1,5 @@
 {
-  "ultima_consulta_utc": "2026-11-07T16:17:24+00:00",
+  "ultima_consulta_utc": "2026-11-07T16:18:58+00:00",
   "estado_consulta": "correcta",
   "nota": "Son coincidencias preliminares. No se consideran convocatorias abiertas ni se cuentan plazas hasta verificar bases, localidad y plazo en la fuente oficial.",
   "fuentes_consultadas": [
@@ -7,26 +7,5 @@
     "RSS oficial BOJA"
   ],
   "errores": [],
-  "candidatas": [
-    {
-      "fuente": "BOE",
-      "titulo": "Resolución de la Autoridad Portuaria de Bilbao por la que se hace público el otorgamiento de la concesión demanial a favor del i-DE Redes Eléctricas Inteligentes, S.A.U. en los términos municipales de Bilbao y Barakaldo.",
-      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-B-2026-36294",
-      "texto_indice": "BOE-B-2026-36294 Resolución de la Autoridad Portuaria de Bilbao por la que se hace público el otorgamiento de la concesión demanial a favor del i-DE Redes Eléctricas Inteligentes, S.A.U. en los términos municipales de Bilbao y Barakaldo. https://www.boe.es/boe/dias/2026/11/06/pdfs/BOE-B-2026-36294.pdf https://www.boe.es/diario_boe/txt.php?id=BOE-B-2026-36294 https://www.boe.es/diario_boe/xml.php?id=BOE-B-2026-36294",
-      "localidades_detectadas": [],
-      "estado": "pendiente_verificar_plazo",
-      "plazas": null,
-      "fecha_fin_solicitud": null
-    },
-    {
-      "fuente": "BOE",
-      "titulo": "Resolución de la Delegación Territorial de Economía, Hacienda, Fondos Europeos y de Universidad, Industria, Energía e Innovación en Jaén, por la que se concede a favor de E-Distribución Redes Digitales S.L.U, autorización administrativa previa y de construcción, así como, la declaración, en concreto, de utilidad pública para el proyecto de instalación de energía eléctrica \"Sustitución apoyo de MT A358989 en línea simple circuito de media tensión \"Torres\" de subestación \"MRENTR\" en el municipio d",
-      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-B-2026-36192",
-      "texto_indice": "BOE-B-2026-36192 Resolución de la Delegación Territorial de Economía, Hacienda, Fondos Europeos y de Universidad, Industria, Energía e Innovación en Jaén, por la que se concede a favor de E-Distribución Redes Digitales S.L.U, autorización administrativa previa y de construcción, así como, la declaración, en concreto, de utilidad pública para el proyecto de instalación de energía eléctrica \"Sustitución apoyo de MT A358989 en línea simple circuito de media tensión \"Torres\" de subestación \"MRENTR\" en el municipio de Torres (Jaén). Expediente: AT-44-2026. https://www.boe.es/boe/dias/2026/11/05/pdfs/BOE-B-2026-36192.pdf https://www.boe.es/diario_boe/txt.php?id=BOE-B-2026-36192 https://www.boe.es/diario_boe/xml.php?id=BOE-B-2026-36192",
-      "localidades_detectadas": [],
-      "estado": "pendiente_verificar_plazo",
-      "plazas": null,
-      "fecha_fin_solicitud": null
-    }
-  ]
+  "candidatas": []
 }
