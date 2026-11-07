@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1f3b">
+<meta name="description" content="Tu panel personal de información y novedades de Kiwiman Digital Labs.">
+<title>Asistente — Kiwiman Digital Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1f3b;--blue:#2d8cff;--teal:#00c6a7;--ink:#13243a;--muted:#63738a;--paper:#f5f8fc;--line:#e4eaf2}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Manrope,system-ui,sans-serif}
+a{color:inherit;text-decoration:none}.wrap{width:min(1100px,calc(100% - 32px));margin:auto}
+header{background:#fff;border-bottom:1px solid var(--line)}.nav{height:76px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;color:var(--navy)}.mark{width:40px;height:40px;border-radius:12px;background:var(--navy);display:grid;place-items:center;color:#fff;font-size:23px;position:relative;overflow:hidden}.mark:after{content:"";position:absolute;width:23px;height:4px;background:var(--teal);right:-5px;bottom:7px;transform:rotate(-45deg)}.brand small{display:block;font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.back{font-size:13px;font-weight:800;color:var(--blue)}
+main{padding:34px 0 60px}.eyebrow{color:#168e89;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+h1{font-size:clamp(32px,5vw,46px);letter-spacing:-1.8px;color:var(--navy);margin:8px 0}.intro{color:var(--muted);line-height:1.7;margin:0 0 26px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:23px;box-shadow:0 8px 26px #0b1f3b08;min-height:205px}
+.card-top{display:flex;gap:13px;align-items:center;margin-bottom:14px}.icon{width:44px;height:44px;border-radius:13px;background:#eaf3ff;color:var(--blue);display:grid;place-items:center;font-size:21px;font-weight:800;flex:0 0 auto}
+h2{font-size:18px;color:var(--navy);margin:0}.tag{font-size:10px;color:#168e89;background:#e5faf6;border-radius:20px;padding:5px 8px;font-weight:800;margin-left:auto}
+p{font-size:13px;color:var(--muted);line-height:1.7}.links{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}.link{display:inline-flex;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:12px;font-weight:800;color:var(--navy)}.link.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.wide{grid-column:1/-1}.place{background:#f0f7ff;border:1px solid #dcecff;border-radius:12px;padding:13px;margin-top:13px}.place strong{display:block;color:var(--navy);font-size:13px}.place span{font-size:12px;color:var(--muted)}
+footer{text-align:center;color:#8090a4;font-size:11px;padding:22px}
+.overlay{position:fixed;inset:0;background:#07172bd9;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.overlay.show{display:flex}.modal{width:min(440px,100%);background:#fff;border-radius:20px;padding:30px;text-align:center;box-shadow:0 25px 90px #0004}.modal-mark{width:54px;height:54px;margin:0 auto 17px;border-radius:16px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:28px;font-weight:800}.modal h2{font-size:23px}.modal p{font-size:15px;margin:13px 0 23px}.button{border:0;border-radius:10px;background:var(--blue);color:#fff;font:800 14px Manrope;padding:13px 22px;cursor:pointer}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.nav{height:68px}main{padding-top:26px}.card{padding:20px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="/"><span class="mark">K</span><span>Kiwiman<small>DIGITAL LABS</small></span></a><a class="back" href="/">Volver a Kiwiman ↗</a></div></header>
+<main class="wrap">
+<div class="eyebrow">Tu espacio personal</div><h1>Asistente</h1>
+<p class="intro">Tu información importante, reunida en un solo lugar.</p>
+<section class="grid">
+<article class="card"><div class="card-top"><div class="icon">✉</div><h2>Correo importante</h2><span class="tag">Próximamente</span></div><p>Prepararemos la conexión con Outlook y Gmail para destacar los mensajes que estés esperando y los que requieran tu atención.</p><div class="links"><a class="link" href="https://outlook.office.com/mail/" target="_blank" rel="noopener">Abrir Outlook ↗</a><a class="link" href="https://mail.google.com/" target="_blank" rel="noopener">Abrir Gmail ↗</a></div></article>
+<article class="card"><div class="card-top"><div class="icon">◷</div><h2>Recordatorios</h2><span class="tag">Panel inicial</span></div><p>Este espacio reunirá tus avisos y tareas importantes. También puedes consultar tus recordatorios de ChatGPT.</p><div class="links"><a class="link" href="https://chatgpt.com/" target="_blank" rel="noopener">Abrir ChatGPT ↗</a></div></article>
+<article class="card wide"><div class="card-top"><div class="icon">▤</div><h2>Empleo público y convocatorias TIC</h2><span class="tag">Fuentes oficiales</span></div><p>Prioridad: El Puerto de Santa María. Después, el resto de la provincia de Cádiz. Consulta aquí los boletines y portales oficiales; la detección automática y el resumen de nuevas convocatorias se incorporarán en una siguiente fase.</p>
+<div class="place"><strong>1. El Puerto de Santa María</strong><span>Consulta las convocatorias y ofertas publicadas por el Ayuntamiento.</span><div class="links"><a class="link primary" href="https://www.elpuertodesantamaria.es/" target="_blank" rel="noopener">Ayuntamiento de El Puerto ↗</a></div></div>
+<div class="place"><strong>2. Provincia de Cádiz y Andalucía</strong><span>Boletín Oficial de la Provincia, BOJA y convocatorias de otras administraciones.</span><div class="links"><a class="link" href="https://www.dipucadiz.es/" target="_blank" rel="noopener">Diputación de Cádiz ↗</a><a class="link" href="https://www.juntadeandalucia.es/eboja.html" target="_blank" rel="noopener">BOJA ↗</a><a class="link" href="https://www.boe.es/" target="_blank" rel="noopener">BOE ↗</a></div></div>
+</article>
+<article class="card"><div class="card-top"><div class="icon">▧</div><h2>Noticias</h2><span class="tag">Próximamente</span></div><p>Un resumen de noticias y novedades tecnológicas seleccionadas para que puedas estar al día sin tener que buscar en varias páginas.</p></article>
+<article class="card"><div class="card-top"><div class="icon">✓</div><h2>Tu día, de un vistazo</h2><span class="tag">En desarrollo</span></div><p>Seguiremos ampliando este panel con información útil, avisos y accesos directos, manteniendo una vista sencilla y cómoda desde el móvil.</p></article>
+</section>
+</main>
+<footer>Kiwiman Digital Labs · Ideas into useful technology.</footer>
+<div class="overlay" id="welcome"><div class="modal"><div class="modal-mark">K</div><div class="eyebrow">Bienvenido</div><h2>Un paso más cada día</h2><p id="phrase"></p><button class="button" id="continue">Entrar al asistente</button></div></div>
+<script>
+const phrases=[
+"Hoy avanzamos un paso más. Tu información en un solo lugar, sencillo y claro.",
+"No necesitas tenerlo todo resuelto. Solo dar el siguiente paso.",
+"Cada pequeño avance cuenta. Vamos a por el día.",
+"Confía en lo que estás construyendo. Las grandes ideas empiezan poco a poco.",
+"Hoy tienes una nueva oportunidad para acercarte a tus objetivos."
+];
+const overlay=document.getElementById("welcome");
+if(!sessionStorage.getItem("kiwimanAsistenteBienvenida")){
+ document.getElementById("phrase").textContent=phrases[Math.floor(Math.random()*phrases.length)];
+ overlay.classList.add("show");
+ sessionStorage.setItem("kiwimanAsistenteBienvenida","1");
+}
+document.getElementById("continue").addEventListener("click",()=>overlay.classList.remove("show"));
+</script>
+</body>
+</html>
