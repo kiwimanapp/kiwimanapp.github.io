@@ -1,0 +1,8 @@
+{
+  "ultima_consulta_utc": null,
+  "estado_consulta": "pendiente_primera_ejecucion",
+  "nota": "Aún no se ha ejecutado la consulta automática. Las coincidencias futuras serán candidatas, no plazas abiertas confirmadas.",
+  "fuentes_consultadas": [],
+  "errores": [],
+  "candidatas": []
+}
