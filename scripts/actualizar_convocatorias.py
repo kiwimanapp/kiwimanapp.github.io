@@ -10,7 +10,10 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 OUT = Path("datos/convocatorias-candidatas.json")
-HEADERS = {"User-Agent": "KiwimanDigitalLabs-Convocatorias/1.0 (consulta de fuentes oficiales)"}
+HEADERS = {
+    "User-Agent": "KiwimanDigitalLabs-Convocatorias/1.0 (consulta de fuentes oficiales)",
+    "Accept": "application/xml",
+}
 KEYWORDS = re.compile(r"\b(inform[aá]tic|microinform[aá]tic|sistem|soporte t[eé]cnic|redes|t[eé]cnic[oa] auxiliar inform[aá]tic|administrador.{0,20}sistema|programador|desarrollador)\b", re.I)
 PLACES = {
     "El Puerto de Santa María": ["el puerto de santa maría", "el puerto de santa maria"],
