@@ -1,13 +1,11 @@
 {
-  "ultima_consulta_utc": "2026-11-18T16:27:16+00:00",
-  "estado_consulta": "parcial",
+  "ultima_consulta_utc": "2026-11-19T16:33:16+00:00",
+  "estado_consulta": "correcta",
   "nota": "Son coincidencias preliminares. No se consideran convocatorias abiertas ni se cuentan plazas hasta verificar bases, localidad y plazo en la fuente oficial.",
   "fuentes_consultadas": [
     "API oficial BOE (últimos 4 sumarios)",
     "RSS oficial BOJA"
   ],
-  "errores": [
-    "BOJA RSS: RemoteDisconnected: Remote end closed connection without response"
-  ],
+  "errores": [],
   "candidatas": []
 }
